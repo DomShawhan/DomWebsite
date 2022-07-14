@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+}
+
+kbd{
+    border:1px solid white;
+    font-size:1.2em;
+    box-shadow:1px 0 1px 0 #eee, 0 2px 0 2px #ccc, 0 2px 0 3px #444;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    margin:2px 3px;
+    padding:1px 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+.header1 {
+    font-size: 2rem;
+    margin: 1.5rem 0;
+}
+
+.canvas-con {
+    width: 100%;
+    position: relative;
+}
+
+.instruction {
+    height: 650px;
+    position: absolute;
+    top: 85.5px;
+    width: 100%;
+    text-align: center;
+    z-index: 400;
+}
+
+.btn.btn-instruction {
+    font-size: 1.25rem;
+    border: 2px dashed white;
+    border-radius: 25px;
+    color: white;
+    background-color: blue;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    padding: 3px 10px;
+}
+
+.instruction-box {
+    line-height: 2.5rem;
+    font-size: 1.5rem;
+    height: 650px;
+    width: 700px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    margin: 0 auto;
+    text-align: baseline;
+}
+
+.high-score-con {
+    font-size: 2rem;
+    margin-top: 680px;
+}
+
+#canvas1 {
+    background-color: gray;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 1;
+}
+
+#canvas2 {
+    display: block;
+    background-color: transparent;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 300;
+    cursor: none;
+}

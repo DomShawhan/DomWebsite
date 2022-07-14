@@ -1,0 +1,493 @@
+@keyframes winner {
+    from {background-color: #FFC0CB;}
+    to {background-color: #800080;}
+    from {color: #800080;}
+    to {color: #FFC0CB;}
+    from {transform: rotate(none);}
+    to {transform: rotate(360deg);}
+}
+
+body {
+    background-color: var(--background-color);
+    text-align: center;
+    font-family: Indie Flower;
+}
+
+.theme-light {
+    --background-color: #ffffff;
+    --color1: #da14ff;
+    --color2: var(--background-color);
+    --color3: #0b71b6;
+    --color4: #28a528;
+    --color5: #e60909;
+    --color6: #9703b1;
+    --color7: #FFFFFF;
+    --color8: #000000;
+    --color9: var(--color7);
+    --color10: var(--color7);
+    --color11: #1439ff;
+    --color12: var(--color7);
+    --color13: #1731c5;
+    --color14: #addda1;
+}
+
+.theme-dark {
+    --background-color: #000000;
+    --color1: #da14ff; /*purple*/
+    --color2: #8A2BE2; /*purple 2*/
+    --color3: #1439ff; /*blue*/
+    --color4: #39ff14; /*green*/
+    --color5: #ffda14; /*yellow*/
+    --color6: #ff14af; /*pink*/
+    --color7: var(--background-color); /*black*/
+    --color8: #FFFFFF; /*white*/
+    --color9: #39ff14;
+    --color10: #1439ff;
+    --color11: #39ff14;
+    --color12: #1731c5;
+    --color13: var(--color8);
+    --color14: var(--color5);
+}
+
+hr {
+    border: 2px dashed var(--color8); /*#FFFFFF*/
+    margin-top: 15px;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+.button {
+    border: 2px solid var(--color7);
+    background-color: var(--color5);
+    color: var(--color7);
+    border-radius: 25px;
+    box-shadow: 0px 4px 4px var(--color3);
+    font-size: 1.0em;
+    font-weight: 500;
+    outline: none;
+}
+
+.button:hover {
+    border: 2px solid var(--color5);
+    background-color: var(--color7);
+    color: var(--color5);
+    border-radius: 25px;
+    box-shadow: 0px 4px 4px var(--color3);
+    font-size: 1.0em;
+    font-weight: 500;
+    outline: none;
+}
+
+input[type="number"]{
+    color: #FFFFFF; /*#FFFFFF;*/
+    background-color: var(--color3);
+    border: 5px ridge  var(--color4);
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0px 4px 4px var(--color14);
+    outline: none;
+}
+
+input[type="text"] {
+    background-color: var(--color1);
+    outline: none;
+}
+
+.navig {
+    color: var(--color1);
+    text-decoration: underline;
+}
+
+.center {
+    padding-left: 25%;
+    padding-right: 25%;
+    outline: none;
+}
+
+.claass {
+    max-width: 125%;
+    min-width: 50%;
+    outline: none;
+}
+
+.digit {
+    color: var(--color8);
+    font-size: 1.5em;
+    font-weight: 600;
+    outline: none;
+}
+
+.pclicked {
+    background-color: #0000FF;
+    color: #5F9EA0;
+    font-size: 2em;
+    border-radius: 25px;
+    outline: none;
+}
+
+.hover {
+    font-size: 1.5em;
+    background-color: var(--color5);
+    color: var(--color2);
+    border: 2px ridge var(--color2);
+    text-align: center;
+    border-radius: 30px;
+    padding: 5px 0;
+    outline: none;
+}
+
+.hover2 {
+    border-radius: 25px;
+    font-size: 2em;
+    background-color: #5F9EA0;
+    color: #00FFFF;
+    outline: none;
+}
+
+.dhover{
+    border-radius: 25px;
+    font-size: 1.5em;
+    background-color: var(--color11);
+    color: var(--color10);
+    border: 2px ridge var(--color10);
+    padding: 5px 0;
+    outline: none;
+}
+
+.dhove {
+    border-radius: 25px;
+    font-size: 1.5em;
+    background-color: var(--color10);
+    color: var(--color11);
+    border: 2px ridge var(--color11);
+    padding: 5px 0;
+    outline: none;
+}
+
+.nhover2 {
+    font-size: 2em;
+    border-radius: 25px;
+    color: var(--color5);
+    box-shadow: 0px 4px 4px var(--color3);
+    outline: none;
+}
+
+.nhover {
+    font-size: 1.5em;
+    background-color: var(--color2);
+    color: var(--color5);
+    border: 2px ridge var(--color5);
+    text-align: center;
+    border-radius: 30px;
+    padding: 5px 0;
+    outline: none;
+}
+
+.new-btn {
+    text-align: center;
+    font-size: 1.5em;
+    outline: none;
+}
+
+.play {
+    color: var(--color5);
+    font-size: 2em;
+    border-radius: 25px;
+    box-shadow: 0px 4px 4px var(--color3);
+    outline: none;
+}
+
+.bid {
+    text-align: center;
+    color: var(--color8);
+    font-size: 2em;
+    outline: none;
+}
+
+.rscore {
+    font-size: 1.5em;
+    color: var(--color2);
+    outline: none;
+}
+
+.tscore {
+    font-size: 1.5em;
+    color: #B8860B;
+    outline: none;
+}
+
+.rs {
+    font-size: 1.5em;
+    color: var(--color6);
+    outline: none;
+}
+
+.ts {
+    font-size: 1.5em;
+    color: var(--color8);
+    outline: none;
+}
+
+.meld {
+    font-size: 1.5em;
+    color: var(--color6);
+    outline: none;
+}
+
+.points {
+    font-size: 1.5em;
+    color: var(--color6);
+    outline: none;
+}
+
+.btmbr {
+    border: 3px solid var(--color8);
+}
+
+.ou1 {
+    box-shadow: 4px 4px 0px var(--color3);
+}
+
+.ou2 {
+    box-shadow: 4px 4px 0px var(--color3);
+}
+
+.ou3 {
+    box-shadow: 0px 4px 0px var(--color3);
+}
+
+.shadow {
+    box-shadow: 0px 4px 4px var(--color3);
+}
+
+.shadow2 {
+    text-shadow: 0px 2px 2px var(--color8);
+}
+
+.shadow3 {
+    text-shadow: 0px 3px 3px var(--color3);
+}
+
+.bidt {
+    font-size: 1.5em;
+    color: var(--color8);
+}
+
+.meld-options {
+    color: var(--color7);
+    font-size: 1.25em;
+}
+
+.meld-opt {
+    color: var(--color3);
+    font-size: 1.5em;
+}
+
+.chgPn {
+    font-size: 1.5em;
+}
+
+.winner {
+    color: #800080;
+    background-color: #FFC0CB;
+    border-color: #FFA500;
+    animation-name: winner;
+    animation-delay: 2s;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: linear;
+}
+
+.show-meld {
+    color: var(--color8);
+    outline: none;
+}
+
+.hrms {
+    border: 1px solid var(--color5);
+}
+
+.scores {
+    color: var(--color3);
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.chg-m-score {
+    color: var(--color8);
+    background-color: var(--color6);
+    border: 2px ridge var(--color8);
+    border-radius: 25px;
+    font-size: 1.5em;
+    outline: none;
+}
+
+.chg-m-score2 {
+    color: var(--color8);
+    background-color: var(--color3);
+    border: 2px ridge var(--color8);
+    border-radius: 25px;
+    font-size: 1.5em;
+    outline: none;
+}
+
+.missed-bid {
+    text-decoration: line-through;
+    color: var(--color4);
+}
+
+.start-game {
+    border: 2px solid var(--color7);
+    background-color: var(--color5);
+    color: var(--color7);
+    border-radius: 25px;
+    box-shadow: 0px 4px 4px var(--color3);
+    font-size: 1.5em;
+    outline: none;
+}
+
+.startG {
+    border: 2px solid var(--color5);
+    background-color: var(--color7);
+    color: var(--color5);
+    border-radius: 25px;
+    box-shadow: 0px 4px 4px var(--color3);
+    font-size: 1.5em;
+    outline: none;
+}
+
+.tutorial {
+    color: var(--color5);
+    text-shadow: none;
+}
+
+.tutorial2 {
+    color: var(--color5);
+    text-shadow: none;
+    font-size: .75em;
+}
+
+.chg-theme {
+    font-size: 1em;
+    border: 2px solid var(--color13);
+    background-color: var(--color12);
+    color: var(--color13);
+    border-radius: 25px;
+    box-shadow: 0px 4px 4px var(--color3);
+    outline: none;
+}
+
+.chg-theme:hover {
+    font-size: 1em;
+    border: 2px solid var(--color12);
+    background-color: var(--color13);
+    color: var(--color12);
+    border-radius: 25px;
+    box-shadow: 0px 4px 4px var(--color3);
+    outline: none;
+}
+
+#winners {
+    font-size: 3em;
+    font-weight: 900;
+    color: var(--color8);
+}
+
+#glyph {
+    font-size: .5em;
+    outline: none;
+}
+
+#span {
+    color: var(--color8);
+    font-size: 1.5em;
+    outline: none;
+}
+
+#winwin {
+    color: var(--color8);
+    font-size: 1.5em;
+    outline: none;
+}
+
+#chgP1N {
+    border-radius: 25px;
+    border-color: var(--color6);
+    text-align: center;
+    outline: none;
+}
+
+#chgP2N {
+    border-radius: 25px;
+    border-color: var(--color6);
+    text-align: center;
+    outline: none;
+}
+
+#chgP3N {
+    border-radius: 25px;
+    border-color: var(--color6);
+    text-align: center;
+    outline: none;
+}
+
+#mo {
+    color: #DC143C;
+    font-size: 3em;
+    outline: none;
+}
+
+#dmo {
+    color: #DC143C;
+    font-size: 3em;
+    outline: none;
+}
+
+#trump {
+    color: #000000;
+    font-size: 1.5em;
+    border-radius: 25px;
+    outline: none;
+}
+
+#ts {
+    font-size: 1.5em;
+    color: var(--color8);
+}
+
+#wScore {
+    color: var(--color5);
+    font-size: 2em;
+}
+
+#PS {
+    text-align: center;
+    text-shadow: 0px 4px 4px var(--color3);
+    color: var(--color8);
+    font-size: 2.75em;
+}
+
+#PS > span {
+    cursor: pointer;
+}
+
+#round-number {
+    border:2px solid var(--color5);
+}
+
+#p1tm {
+    border:2px solid var(--color5);
+}
+
+#p2tm {
+    border: 2px solid var(--color5);
+}
+
+#p3tm {
+    border: 2px solid var(--color5);
+}
+
+::placeholder {
+    color: var(--color7);
+}

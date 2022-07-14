@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/missile/images/missile.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/missile/missile.css">
+    <title>Air Defense</title>
+</head>
+<body>
+
+    <header class="header1">Air Defense<button class="btn btn-instruction" onclick="toggleHidden()">Help</button></header>
+
+    <div class="canvas-con">
+        <canvas id="canvas1" width="700" height="650">Your browser does not support the canvas element.</canvas>
+        <canvas id="canvas2" width="700" height="650" autofocus tabindex="1">Your browser does not support the canvas element.</canvas>
+    </div>
+
+    <div class="high-score-con">
+        Your high score is: <span id="high-score"></span>
+    </div>
+
+    <div class="instruction hidden" id="instruct">
+        <div class="instruction-box" id="instruct-box">
+            Air defense
+            <br>
+            You are the commander of the last cannon before your city.
+            Each plane that gets past damages the city. Shoot the planes down before they
+            reach the city. But be careful, Santa brings you more health and missiles,
+             if he gets through.
+            If you shoot him down, you lose points. Every enemy planes that gets through 
+            costs you points. Be careful, you have limited missiles.
+            Good Luck!
+        </div>
+    </div>
+
+    <script src="/missile/missile.js" type="text/javascript"></script>
+</body>
+</html>

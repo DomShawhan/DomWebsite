@@ -1,0 +1,36 @@
+<%- include("../partials/header") %>
+
+<div class="ui container">
+    <h1>Edit <em><%= comment.title %></em></h1>
+
+    <form action="/kk/recipes/<%= recipe_id %>/comments/<%= comment._id %>?_method=PUT" class="ui form" method="POST">
+        <div class="field">
+            <label>Comment Title</label>
+            <div class="ui large input">
+                <input type="text" name="comment[title]" placeholder="Comment Title" value="<%= comment.title %>" />
+            </div>
+        </div>
+        <br>
+        <div class="field">
+            <label>Comment Body</label>
+            <textarea rows="2" name="comment[content]" required><%= comment.content %></textarea>
+        </div>
+        <br>
+        <div class="field">
+            <div class="ui large input">
+                <button name="submit" class="ui <% color() %> button">Submit</button>
+                <a name="submit" href="/kk/recipes/show/<%= recipe_id %>" class="ui <% color() %> button">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue 
+    <% } %>
+<% } %>
+
+<%- include("../partials/footer") %>

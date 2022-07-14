@@ -1,0 +1,77 @@
+<%- include("../partials/header") %>
+
+<div class="ui container">
+    <div class="ui <% color() %> segment container">
+        <div class="ui top <% color() %> attached header">
+            <form action="/kk/recipes/search/" method="get">
+                <div>
+                    <h1>Search Results for <%= search %></h1>
+                    <div class="ui medium action input" class="get">
+                        <input name="search" type="search" value="<%= search %>" placeholder="Search All Recipes">
+                        <button class="ui button">Search</button>
+                    </div>
+                </div>                      
+            </form>
+            <div>
+                <span class="ui buttons">
+                    <button name="sort down" class="ui <% color() %> icon button" id="down" disabled><i class="sort alphabet down icon"></i></button>
+                    <div class="or"></div>
+                    <button name="sort up" class="ui <% color() %> icon button" id="up"><i class="sort alphabet up icon"></i></button>
+                </span>
+            </div>
+            <br>
+            <div class="ui container">
+                <button class="ui <% color() %> button" id="all" disabled>All</button>
+                <button class="ui <% color() %> button" id="appetizer">Appetizer</button>
+                <button class="ui <% color() %> button" id="main">Main</button>
+                <button class="ui <% color() %> button" id="dessert">Dessert</button>
+                <button class="ui <% color() %> button" id="bread">Bread</button>
+                <button class="ui <% color() %> button" id="icing">Icing</button>
+            </div>
+        </div>
+            <div class="ui <% color() %> attached segment">
+                <div class="start">
+                    <% if(recipes && recipes.length > 0){ %>
+                        <% recipes.forEach(function(recipe){ %>
+                            <div class="container">
+                                <h1 class="data recipe"><%= recipe.title %>
+                                    <strong class="h1a pull-right type"><%= recipe.type %></strong>
+                                    <% if(recipe.special === "gluten") { %>
+                                        <div><strong class="h1a pull-right special">Gluten-Free</strong></div>
+                                    <% } else if(recipe.special === "dairy") { %>
+                                        <div><strong class="h1a pull-right special">Dairy-Free</strong></div>
+                                    <% }  else { %>
+                                        <div><strong class="h1a pull-right special">None</strong></div>
+                                    <% } %>
+                                    <div>
+                                        <a href="/kk/recipes/show/<%= recipe.slug %>" class="h1a">View Recipe</a>
+                                    </div>
+                                    <% if(recipe.description){ %>
+                                    <div>
+                                        <p class="h1a"><%= recipe.description.substring(0, 50) %>...</p>
+                                    </div>
+                                    <hr>
+                                    <% } %>
+                                </h1>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <h3>No Recipes found for "<%= search %>"</h3>
+                    <% } %>
+                </div>
+        </div>
+    </div>
+</div>
+
+<script src="/kk/javascript/main.js"></script>
+<script src="/kk/javascript/search.js"></script>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue 
+    <% } %>
+<% } %>
+
+<%- include("../partials/footer") %>

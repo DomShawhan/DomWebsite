@@ -1,0 +1,29 @@
+<%- include("../partials/header") %>
+<div class="ui container">
+    <form action="/kk/forgot" method="POST">
+        <h1>Forgot Password</h1>
+        <div class="field">
+            <div>
+                <label for="email">Email</label>
+            </div>
+            <div class="ui fluid action large input">
+                <input type="email" name="email" autofocus>
+            </div>
+        </div>
+        <br>
+        <div class="field">
+            <div class="ui large input">
+                <button class="ui <% color() %> button">Reset Password</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue 
+    <% } %>
+<% } %>
+<%- include("../partials/footer") %>

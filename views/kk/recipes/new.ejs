@@ -1,0 +1,300 @@
+<%- include("../partials/header") %>
+
+<div class="ui container">
+    <h1>Make A New Recipe</h1>
+    <div class="button-select">
+        <div class="field" style="display: inline-block;">
+            <input type="radio" class="hidden" name="recipe-type" id="write" checked>
+            <label for="write" class="ui <% color() %> button" id="write-btn" onclick="showType()">Type in recipe</label>
+        </div>
+        <div class="field" style="display: inline-block;">
+            <input type="radio" class="hidden" name="recipe-type" id="upload">
+            <label for="upload" class="ui <% color() %> button" id="upload-btn" onclick="showUpload()">Upload image of recipe card</label>
+        </div>
+    </div>
+    <div class="ui <% color() %> inverted segment" id="write-form">
+        <form class="ui big inverted form" action="/kk/recipes" method="POST">
+            <div class="field">
+                <label>Title</label>
+                <input type="text" name="recipe[title]" placeholder="title" required>
+            </div>
+            <br>
+            <div class="field">
+                <label># of Servings</label>
+                <input type="text" name="recipe[serves]" placeholder="serves" required value="unknown">
+            </div>
+            <br>
+            <div class="field">
+                <input type="radio" name="recipe[public]" value="true" checked>Public &nbsp&nbsp
+                <input type="radio" name="recipe[public]" value="false">Private
+            </div>
+            <hr>
+            <div class="field">
+                <label>Author(optional)</label>
+                <input type="text" name="recipe[createdby]" placeholder="author">
+            </div>
+            <hr>
+            <div class="field">
+                <label for="gluten-t" style="display: inline-block;">Gluten-Free</label>
+                <input type="checkbox" style="display: inline-block;" name="recipe[gluten]" value="true" id="gluten-t">
+            </div>
+            <div class="field">
+                <label for="dairy-t" style="display: inline-block;">Dairy-Free</label>
+                <input type="checkbox" style="display: inline-block;" name="recipe[dairy]" value="true" id="dairy-t">
+            </div>
+            <div class="field">
+                <label for="vegan-t" style="display: inline-block;">Vegan</label>
+                <input type="checkbox" style="display: inline-block;" name="recipe[vegan]" value="true" id="vegan-t">
+            </div>
+            <div class="field">
+                <label for="vegetarian-t" style="display: inline-block;">Vegetarian</label>
+                <input type="checkbox" style="display: inline-block;" name="recipe[vegetarian]" value="true" id="vegetarian-t">
+            </div>
+            <hr>
+            <div class="field">
+                <label>Type of Recipe</label>
+                <br>
+                <div class="ui grid">
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Bread" checked required>Bread
+                    </div>
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Main" required>Main
+                    </div>
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Appetizer" required>Appetizer
+                    </div>
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Dessert" required>Dessert
+                    </div>
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Icing" required>Icing
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="field" id="ingre">
+                <div class="ui <% color() %> button" id="add-ingre" >
+                    Add Ingredient
+                </div>
+                <div class="element" id="div_1">
+                    <div class="fields ingre">
+                        <div class="field">
+                            <label>Amount</label>
+                            <input type="text" name="recipe[ingredient_amount]" placeholder="e.g. 1/3 cup" required> 
+                        </div>
+                        <div class="field">
+                            <label>Ingredient</label>
+                            <input type="text" name="recipe[ingredient_name]" placeholder="e.g. Sugar" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="field">
+                <label>Description</label>
+                <textarea cols="50" rows="2" name="recipe[description]" required>(none)</textarea>
+            </div>
+            <div class="field">
+                <label>Directions</label>
+                <textarea cols="50" name="recipe[directions]" required></textarea>
+            </div>
+            <input type="submit" class="ui <% color() %> button">
+        </form>
+    </div>
+    <div class="ui <% color() %> inverted segment hidden" id="upload-form">
+        <form class="ui big inverted form" enctype="multipart/form-data" action="/kk/recipes/file" method="POST" id="form-up">
+            <div class="field">
+                <label>Title</label>
+                <input type="text" name="recipe[title]" placeholder="title" required>
+            </div>
+            <div class="field">
+                <label># of Servings</label>
+                <input type="text" name="recipe[serves]" placeholder="serves" required value="unknown">
+            </div>
+            <br>
+            <div class="field">
+                <input type="radio" name="recipe[public]" value="true" checked>Public &nbsp&nbsp
+                <input type="radio" name="recipe[public]" value="false">Private
+            </div>
+            <hr>
+            <div class="field">
+                <label for="gluten" style="display: inline-block;">Gluten-Free</label>
+                <input type="checkbox" style="display: inline-block;" name="recipe[gluten]" value="true" id="gluten">
+            </div>
+            <div class="field">
+                <label for="dairy" style="display: inline-block;">Dairy-Free</label>
+                <input type="checkbox" style="display: inline-block;" name="recipe[dairy]" value="true" id="dairy">
+            </div>
+            <div class="field">
+                <label for="vegan" style="display: inline-block;">Vegan</label>
+                <input type="checkbox" style="display: inline-block;" name="recipe[vegan]" value="true" id="vegan">
+            </div>
+            <div class="field">
+                <label for="vegetarian" style="display: inline-block;">Vegetarian</label>
+                <input type="checkbox" style="display: inline-block;" name="recipe[vegetarian]" value="true" id="vegetarian">
+            </div>
+            <hr>
+            <div class="field">
+                <label>Type of Recipe</label>
+                <br>
+                <div class="ui grid">
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Bread" checked required>Bread
+                    </div>
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Main" required>Main
+                    </div>
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Appetizer" required>Appetizer
+                    </div>
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Dessert" required>Dessert
+                    </div>
+                    <div class="ui four wide">
+                        <input type="radio" name="recipe[type]" value="Icing" required>Icing
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="field">
+                <label>Description</label>
+                <textarea cols="50" rows="2" name="recipe[description]" required>(none)</textarea>
+            </div>
+            <hr>
+            <div class="field">
+                <label for="image"><span style="font-size: 1.5rem;">Add Images</span> <br> <span style="font-size: .75em;"> Max of 5 images</span> <br> If on pc, use <kbd>ctrl</kbd> + click to select multiple images. <br> Only .jpg, .jpeg, and .png images are allowed.</label>
+                <input type="file" multiple name="recipe[pics]" placeholder="image"  accept=".jpg,.jpeg,.png" id="image" max="5" onchange="validateFileType()">
+                <div id="verify-img" class="hidden"><h2>You have uploaded more than the limit of five images.</h2></div>
+            </div>
+            <input type="submit" class="ui <% color() %> button" id="submit-form">
+        </form>
+    </div>
+</div>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue 
+    <% } %>
+<% } %>
+
+<script
+    src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+    crossorigin="anonymous">
+</script>
+
+<script>
+    var ingresec = document.getElementById("ingre");
+    var addIngre = document.getElementById("add-ingre");
+    var writeForm = document.getElementById("write-form");
+    var uploadForm = document.getElementById("upload-form");
+    var show = "write";
+    var delIngre, ingre, add;
+
+    function showType() {
+        if(writeForm.classList.contains("hidden")) {
+            writeForm.classList.remove("hidden");
+            uploadForm.classList.add("hidden");
+        };
+    };
+
+    function showUpload() {
+        if(uploadForm.classList.contains("hidden")) {
+            writeForm.classList.add("hidden");
+            uploadForm.classList.remove("hidden");
+        };
+    };
+
+    $("#add-ingre").click(function(){
+        // Finding total number of elements added
+        var total_element = $(".element").length;
+
+        // last <div> with element class id
+        var lastid = $(".element:last").attr("id");
+        var split_id = lastid.split("_");
+        var nextindex = Number(split_id[1]) + 1;
+        // Adding new div container after last occurance of element class
+        $(".element:last").after("<div class='element' id='div_"+ nextindex +"'></div>");
+
+        // Adding element to <div>
+        $("#div_" + nextindex).append(
+            "<div class=\"fields ingre\">" +
+                "<div class=\"field\">" +
+                    "<label>Amount</label>" +
+                    "<input type=\"text\" name=\"recipe[ingredient_amount]\" placeholder=\"e.g. 1/3 cup\" required>"+ 
+                "</div>"+
+                "<div class=\"field\">"+
+                    "<label>Ingredient</label>"+
+                    "<input type=\"text\" name=\"recipe[ingredient_name]\" placeholder=\"e.g. Sugar\" required>"+
+                "</div>"+
+                "<div class=\"inline del-ingre remove ui circular icon red button\" id='remove_" + nextindex + "'>"+
+                    "<i class=\"minus circle icon\"></i>"+
+                "</div>"+
+            "</div>"
+        );
+    });
+
+    $('#ingre').on('click','.remove',function() {
+        var id = this.id;
+        var split_id = id.split("_");
+        var deleteindex = split_id[1];
+
+        $("#div_" + deleteindex).remove();
+    });
+
+    const form = document.querySelector("#form-up");
+    const fileInput = document.querySelector("#image");
+    const verImg = document.querySelector("#verify-img");
+    
+    form.addEventListener("submit", function(e) {
+        if(fileInput.files.length > 5) {
+            e.preventDefault();
+            if(verImg.classList.contains("hidden") === true) {
+                verImg.classList.remove("hidden");
+            };
+        };
+    });
+
+    function validateFileType(){
+        var fileName = document.getElementById("image").value;
+        var idxDot = fileName.lastIndexOf(".") + 1;
+        var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+        var fileSubmit = document.getElementById("submit-form");
+        if (extFile!=="jpg" && extFile!=="jpeg" && extFile!=="png"){
+            if(fileSubmit.disabled === false) {
+                fileSubmit.disabled = true;
+            };
+        } else {
+            if(fileSubmit.disabled === true) {
+                fileSubmit.disabled = false;
+            };
+        };
+    };
+
+    fileInput.addEventListener("input", (e) => {
+        if(verImg.classList.contains("hidden") === false) {
+            verImg.classList.add("hidden");
+        };
+    });
+</script>
+
+<style>
+kbd {
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #b4b4b4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+    color: #333;
+    display: inline-block;
+    font-size: .85em;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 4px;
+    white-space: nowrap;
+}
+</style>
+
+<%- include("../partials/footer") %>

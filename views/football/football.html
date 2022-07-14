@@ -1,0 +1,213 @@
+<html lang="en">
+<head>
+    <title>Football Game</title>
+    <link rel="stylesheet" href="/football/football.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="/football/football.png">
+</head>
+<body>
+    <div class="container" id="set">
+        <div class="group">
+            <label for="op-team-name">Opponent's or P2 Team Name</label>
+            <input type="text" id="op-team-name" class="team-input" value="Computer" required>
+        </div>
+        <div class="group">
+            <label for="yo-team-name">P1 Team Name </label>
+            <input type="text" id="yo-team-name" class="team-input" value="P1" required>
+        </div>
+        <hr>
+        <div class="difficulty" id="difficulty">
+            <span>Difficulty </span> <br>
+            <input type="radio" name="difficulty" value="Easy" checked required>Easy <br>
+            <input type="radio" name="difficulty" value="Medium" required>Medium <br>
+            <input type="radio" name="difficulty" value="Hard" required>Hard
+        </div>
+        
+        <br><hr><br>
+        <div class="players">
+            <span># of Players </span> <br>
+            <input type="radio" name="players" value="one" checked required onclick="onePlayer()">One-Player <br>
+            <input type="radio" name="players" value="two" required onclick="twoPlayer2()">Two-Player
+        </div>
+        <hr>
+        <input type="submit" class="game-btn" value="Start Game" onclick="startGame()">
+    </div>
+
+    <div class="container hidden" id="game">
+        <div class="scoreboard">
+            <div class="grid sc-grid">
+                <div class="home-team one-third">
+                    <div class="ht-score score"><span id="op-t-n"></span>&nbsp;<span class="score-box" id="ht-score">42</span> <dot class="dot"></dot><br><span id="p2-drive"><dot class="p2-drive"></dot><dot class="p2-drive"></dot><dot class="p2-drive"></dot></span></div>
+                </div>
+                <div class="quarter one-third">
+                    <span id="quarter"><span id="q-number">4th</span> Quarter</span><span id="final" class="hidden">Final</span>
+                    <br>
+                </div>
+                <div class="away-team one-third">
+                    <div class="aw-score score"> <dot class="dot"> </dot> &nbsp;<span class="score-box" id="aw-score">39</span>&nbsp;<span id="yo-t-n"></span><br><span id="p1-drive"><dot class="p1-drive"></dot><dot class="p1-drive"></dot><dot class="p1-drive"></dot></span></div>
+                </div>
+            </div>
+            <div class="y-t-g">
+                <span id="down">1st</span> and <span id="yard">10</span>
+            </div>
+        </div>
+        <br>
+        <div class="field">
+            <div class="field-markings" id="field-mark">
+                <div class="td-1" ><span id="away-end"></span></div>
+                <div class="yd-1"></div>
+                <div class="yd-2"></div>
+                <div class="yd-3"></div>
+                <div class="yd-4"></div>
+                <div class="yd-5">5 <br>&DoubleLeftArrow;</div>
+                <div class="yd-6"></div>
+                <div class="yd-7"></div>
+                <div class="yd-8"></div>
+                <div class="yd-9"></div>
+                <div class="yd-10">10 <br>&DoubleLeftArrow;</div>
+                <div class="yd-11"></div>
+                <div class="yd-12"></div>
+                <div class="yd-13"></div>
+                <div class="yd-14"></div>
+                <div class="yd-15">15 <br>&DoubleLeftArrow;</div>
+                <div class="yd-16"></div>
+                <div class="yd-17"></div>
+                <div class="yd-18"></div>
+                <div class="yd-19"></div>
+                <div class="yd-20">20 <br>&DoubleLeftArrow;</div>
+                <div class="yd-21"></div>
+                <div class="yd-22"></div>
+                <div class="yd-23"></div>
+                <div class="yd-24"></div>
+                <div class="yd-25">25 <br>&DoubleLeftArrow;</div>
+                <div class="yd-26"></div>
+                <div class="yd-27"></div>
+                <div class="yd-28"></div>
+                <div class="yd-29"></div>
+                <div class="yd-30">30 <br>&DoubleLeftArrow;</div>
+                <div class="yd-31"></div>
+                <div class="yd-32"></div>
+                <div class="yd-33"></div>
+                <div class="yd-34"></div>
+                <div class="yd-35">35 <br>&DoubleLeftArrow;</div>
+                <div class="yd-36"></div>
+                <div class="yd-37"></div>
+                <div class="yd-38"></div>
+                <div class="yd-39"></div>
+                <div class="yd-40">40 <br>&DoubleLeftArrow;</div>
+                <div class="yd-41"></div>
+                <div class="yd-42"></div>
+                <div class="yd-43"></div>
+                <div class="yd-44"></div>
+                <div class="yd-45">45 <br>&DoubleLeftArrow;</div>
+                <div class="yd-46"></div>
+                <div class="yd-47"></div>
+                <div class="yd-48"></div>
+                <div class="yd-49"></div>
+                <div class="yd-50">50 <br>&DoubleLeftRightArrow;</div>
+                <div class="field-right">
+                    <div class="yd-51"></div>
+                    <div class="yd-51"></div>
+                    <div class="yd-52"></div>
+                    <div class="yd-53"></div>
+                    <div class="yd-54"></div>
+                    <div class="yd-55">45 <br><span class="arrow-mark">&DoubleRightArrow;</span></div>
+                    <div class="yd-56"></div>
+                    <div class="yd-57"></div>
+                    <div class="yd-58"></div>
+                    <div class="yd-59"></div>
+                    <div class="yd-60">40 <br><span class="arrow-mark">&DoubleRightArrow;</span></div>
+                    <div class="yd-61"></div>
+                    <div class="yd-62"></div>
+                    <div class="yd-63"></div>
+                    <div class="yd-64"></div>
+                    <div class="yd-65">35 <br><span class="arrow-mark">&DoubleRightArrow;</span></div>
+                    <div class="yd-66"></div>
+                    <div class="yd-67"></div>
+                    <div class="yd-68"></div>
+                    <div class="yd-69"></div>
+                    <div class="yd-70">30 <br><span class="arrow-mark">&DoubleRightArrow;</span></div>
+                    <div class="yd-71"></div>
+                    <div class="yd-72"></div>
+                    <div class="yd-73"></div>
+                    <div class="yd-74"></div>
+                    <div class="yd-75">25 <br><span class="arrow-mark">&DoubleRightArrow;</span></div>
+                    <div class="yd-76"></div>
+                    <div class="yd-77"></div>
+                    <div class="yd-78"></div>
+                    <div class="yd-79"></div>
+                    <div class="yd-80">20 <br><span class="arrow-mark">&DoubleRightArrow;</span></div>
+                    <div class="yd-81"></div>
+                    <div class="yd-82"></div>
+                    <div class="yd-83"></div>
+                    <div class="yd-84"></div>
+                    <div class="yd-85">15 <br><span class="arrow-mark">&DoubleRightArrow;</span></div>
+                    <div class="yd-86"></div>
+                    <div class="yd-87"></div>
+                    <div class="yd-88"></div>
+                    <div class="yd-89"></div>
+                    <div class="yd-90">10 <br><span class="arrow-mark">&DoubleRightArrow;</span></div>
+                    <div class="yd-91"></div>
+                    <div class="yd-92"></div>
+                    <div class="yd-93"></div>
+                    <div class="yd-94"></div>
+                    <div class="yd-95">5 <br><span class="arrow-mark arrow-mark-1">&DoubleRightArrow;</span></div>
+                    <div class="yd-96"></div>
+                    <div class="yd-97"></div>
+                    <div class="yd-98"></div>
+                    <div class="yd-99"></div>
+                </div>
+                <div class="td-2"><span id="home-end"></span></div>
+            </div>
+            <div class="field-2" id="field">&nbsp;</div>
+            <div class="yard-marker" id="yard-mark">
+                <div class="yard-number" id="yard-num"></div>
+            </div>
+            <div class="last-play" id="last-p-con">
+                <span id="last-play"></span>
+            </div>
+        </div>
+        <br>
+        <div class="playbook">
+            <div class="grid pb-grid">
+                <div class="run-plays p-1-2 one-half">
+                    Run Plays
+                    <div class="grid">
+                        <button class="play one-third run" onclick="runplay()">Run Left</button>
+                        <button class="play one-third run" onclick="runplay()">Run Center</button>
+                        <button class="play one-third run" onclick="runplay()">Run Right</button>
+                    </div>
+                </div>
+                <div class="pass-plays p-1-2 one-half">
+                    Pass Plays
+                    <div class="grid">
+                        <button class="play one-third pass" onclick="passplay(passSResults, 25, 0)">Pass Short</button>
+                        <button class="play one-third pass" onclick="passplay(passResults, 50, 26)">Pass Medium</button>
+                        <button class="play one-third pass" onclick="passplay(passLResults, 75, 51)">Pass Long</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="hidden" id="over">
+            <div class="over-score">
+                <div class="p1-over">
+                    <div id="p2-over-name">P2</div>
+                    <div id="p2-over-score">30</div>
+                </div>
+                <div class="final-over">
+                    <div id="final-score">Final <br></div>
+                </div>
+                <div class="p2-over">
+                    <div id="p1-over-name">P1</div>
+                    <div id="p1-over-score">33</div>
+                </div>
+            </div>
+            <br><br><br><br>
+            <input type="submit" class="new-game game-btn" value="New Game" onclick="newGame()">
+        </div>
+    </div>
+<script src="/football/football.js"></script>
+</body>
+</html>

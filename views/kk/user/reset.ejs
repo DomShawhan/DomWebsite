@@ -1,0 +1,38 @@
+<%- include("../partials/header") %>
+
+<div class="ui container">
+    <form action="/kk/reset/<%= token %>" method="post">
+        <div class="field">
+            <div>
+                <label for="password">New Password</label>
+            </div>
+            <div class="ui large input">
+                <input type="password" name="password" placeholder="New Password" title="8 to 16 characters" pattern=".{8,16}" value="" autofocus="autofocus">
+            </div>
+        </div>
+        <br>
+        <div class="field">
+            <div>
+                <label for="confirm">Confirm Password</label>
+            </div>
+            <div class="ui large input">
+                <input type="password" name="confirm" placeholder="Confirm Password" title="8 to 16 characters" pattern=".{8,16}" value="" autofocus="autofocus">
+            </div>
+        </div>
+        <br>
+        <div class="field">
+            <div class="ui large input">
+                <button class="ui <% color() %> button">Update Password</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue 
+    <% } %>
+<% } %>
+<%- include("../partials/footer") %>

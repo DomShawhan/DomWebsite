@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Kramped Cookbook</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+        <link rel="stylesheet" href="/kk/stylesheets/main.css">
+        <script src="/kk/javascript/af.js"></script>
+        <meta name=”description” content="A Recipe Storage Website">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <input type="checkbox" id="navi-toggle" class="hidden expand-input">
+        <div class="ui <% color() %> inverted stackable menu">
+            <div class="ui container">
+                <div class="header item">
+                    <i class="utensil spoon icon"></i>
+                    <span class="expand-nav-mobile">
+                        <label for="navi-toggle" class="nav-expand-button">
+                            <i class="expand icon"></i>
+                        </label>
+                    </span>
+                </div>
+                <a href="/kk/recipes" class="item">Home</a>
+                <a href="/kk/recipes/new/new" class="item">New Recipe</a>
+                <div class="right menu">
+                    <% if(!currentUser){ %>
+                        <a href="/kk/login" class="ui item"><i class="user icon"></i>Login</a>
+                        <a href="/kk/register" class="ui item"><i class="user plus icon"></i>Signup</a>
+                    <% }else{ %>
+                        <div class="dropdown">
+                            <div class="dropbtn">Signed in as <img class="ui avatar image" id="user-header-img" src="<%= currentUser.img.img %> " alt="user img"><%= currentUser.username %></div>
+                            <div class="dropdown-content" style="background-color: <%= color() %>;">
+                                <a href="/kk/user/<%= currentUser.slug %>" class="item">My Recipes</a>
+                                <a href="/kk/user/<%= currentUser.slug %>/favorites" class="item">My Favorite Recipes</a>
+                                <a href="/kk/user/<%= currentUser.slug %>/profile" class="item">User Profile</a>
+                                <a href="/kk/user/<%= currentUser.slug %>/edit/settings" class="item">User Settings</a>
+                                <% if(currentUser.messages !== undefined) { %> 
+                                    <a href="#messages" class="item">My Messages <div class="message-num" id="message-num"><%= messageNum() %></div></a>
+                                <% } %> 
+                                <% if(currentUser.shared.length > 0 || currentUser.allShared.length > 0) { %>
+                                    <a href="/kk/user/<%= currentUser.slug %>/shared" class="item">Shared Recipes</a>
+                                <% } %>
+                            </div>
+                          </div> 
+                        <a href="/kk/logout" class="ui item"><i class="user secret icon"></i>Log Out</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <% if(currentUser) { %> 
+            <% if(currentUser.messages !== undefined){ %> 
+                <div id="messages" class="messages-con">
+                    <div class="ui container" id="message-container">
+                        <div class="ui <% color() %> attached header">
+                            <h4><a href="" class="close-message pull-right">&Chi;</a></h4>
+                            <h2 class="message-header">My Messages</h2>
+                        </div>
+                        <div class="message-alert" id="message-alert"></div>
+                        <div class="ui <% color() %> attached segment messages-container">
+                            <% let sortedMessages = currentUser.messages.sort((a, b) => b.date > a.date ? 1: -1) %> 
+                            <% sortedMessages.forEach((message) => { %>
+                                <div class="message" id="con-<%= message.id %>">
+                                    <div class="date"><%= message.date.toDateString() %></div>
+                                    <%- message.body %>
+                                    <br>
+                                    <% if(message.read === false) { %>
+                                        <a onclick="readMessage('<%= message.id %>')" id="<%= message.id %>">Mark as read<br></a>
+                                    <% } %> 
+                                    <a onclick="deleteMessage('<%= message.id %>')" id="<%= message.id %>">Delete Message</a>
+                                    <div class="ui divider"></div>
+                                </div>
+                            <% }) %> 
+                        </div>
+                    </div>
+                </div>
+            <% } %> 
+        <% } %> 
+
+        <div class="ui container" id="alert">
+            <% if(error && error.length > 0){ %>
+              <div class="ui negative message" role="alert"><%= error %></div>
+            <% } %>
+            <% if(success && success.length > 0){ %>
+              <div class="ui positive message" role="alert"><%= success %></div>
+            <% } %>
+        </div>
+
+        <% function color(){ %>
+            <% if(currentUser){ %>
+                <%= currentUser.color %>
+            <% } else { %>
+                blue 
+            <% } %>
+        <% } %>
+
+        <% function messageNum() {
+            let num = 0;
+            currentUser.messages.forEach((message) => {
+                if(message.read === false) {
+                    num++;
+                };
+            });
+            return num;
+        } %>

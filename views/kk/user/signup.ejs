@@ -1,0 +1,59 @@
+<%- include("../partials/header") %>
+
+<div class="ui center container">
+    <h1>Sign up</h1>
+
+    <form action="/kk/register" method="POST">
+        <div class="field">
+            <div>
+                <label>Username</label>
+            </div>
+            <div class="ui large input">    
+                <input type="text" name="username" placeholder="username" required />
+            </div>
+        </div>
+        <br>
+        <div class="field">
+            <div>
+                <label>Email</label>
+            </div>
+            <div class="ui large input">
+                <input type="email" name="email" placeholder="email" required />
+            </div>
+        </div>
+        <br>
+        <div class="field">
+            <div>
+                <label>Password</label>
+            </div>
+            <div class="ui large input">
+                <input type="password" name="password" placeholder="password" title="8 to 16 characters" required pattern=".{8,16}"/>
+            </div>
+        </div>
+        <br>
+        <div class="field">
+            <div>
+                <label>Confirm Password</label>
+            </div>
+            <div class="ui large input">
+                <input type="password" name="confirm" placeholder="password" title="8 to 16 characters" required pattern=".{8,16}"/>
+            </div>
+        </div>
+        <br>
+        <div class="field">
+            <div class="ui large input">
+                <button name="signup" class="ui <% color() %> button">Signup</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue 
+    <% } %>
+<% } %>
+
+<%- include("../partials/footer") %>

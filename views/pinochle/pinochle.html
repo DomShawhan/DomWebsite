@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pinochle Scorekeeper</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/pinochle/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/pinochle/css/Pinochle.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div id="PS">
+	Pinochle Scorekeeper
+    <span class="glyphicon glyphicon-question-sign" aria-hidden="true" id="glyph"></span>
+</div>
+<div class="container">
+	<div class="container col-xs-5 play-game hidden click-meld">
+		<hr>
+		<div class="meld-opt shadow2">
+            Meld Options
+            <div class="tutorial tutorial2 hidden">
+				1. Click a player name
+            </div>
+            <div class="tutorial tutorial2 hidden">
+            	2. Then click A meld option
+            </div>
+            <div class="tutorial tutorial2 hidden">
+				3. Meld appears Below player box
+			</div>
+            <div class="tutorial tutorial2 hidden">
+            	4. Enter points
+            </div>
+            <div class="tutorial tutorial2 hidden">
+            	5. Click "Add Round Score" to add round score to total
+            </div>
+            <div class="tutorial tutorial2 hidden">
+            	6. Click "New Hand" to set new hand
+            </div>
+            <div class="tutorial tutorial2 hidden">
+            	Click "Restart Game" to restart game
+            </div>
+            <div class="tutorial tutorial2 hidden">
+            	If you error while entering hand, just click "New Hand"
+			</div>
+			<div class="tutorial tutorial2 hidden">
+				Undo resets the values to those of the previous round
+			</div>
+        </div>
+		<hr>
+		<div class="row">
+			<div class="col-sm-6 meldop nhover shadow" id="pin">
+			Pinochle
+			</div>
+			<div class="col-sm-6 meldop nhover shadow" id="run">
+			Run
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 meldop nhover shadow" id="mar">
+			Marriage
+			</div>
+			<div class="col-sm-6 meldop nhover shadow" id="mart">
+			Mar. of Trump
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 meldop nhover shadow" id="aa">
+			Aces Around
+			</div>
+			<div class="col-sm-6 meldop nhover shadow" id="ka">
+			Kings Around
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 meldop nhover shadow" id="qa">
+			Queens Around
+			</div>
+			<div class="col-sm-6 meldop nhover shadow" id="ja">
+			Jacks Around
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 meldop nhover shadow" id="nt">
+			Nine of Trump
+			</div>
+			<div class="col-sm-6 meldop nhover shadow" id="mara">
+			Mar. Around
+			</div>
+		</div>
+		<hr>
+		<div class="meld-opt shadow2">
+             Double Meld Options
+        </div>
+		<hr>
+		<div class="row">
+			<div class="col-sm-6 meldop dhove shadow" id="dpin">
+			Double Pinochle
+			</div>
+			<div class="col-sm-6 meldop dhove shadow" id="drun">
+			Double Run
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 meldop dhove shadow" id="dmar">
+			Double Marriage
+			</div>
+			<div class="col-sm-6 meldop dhove shadow" id="daa">
+			Double Aces
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 meldop dhove shadow" id="dka">
+			Double Kings
+			</div>
+			<div class="col-sm-6 meldop dhove shadow" id="dqa">
+			Double Queens
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 meldop dhove shadow" id="dja">
+			Double Jacks
+			</div>
+		</div>
+		<br>
+		<div class="chg-theme">Change color theme</div>
+	</div>
+
+	<div class="container col-xs-1"></div>
+
+	<div class="container col-xs-6 play-game hidden end-game">
+		<div class="shadow3" id="wScore">
+			Winning Score = <span id="win-score">1500</span>
+		</div>
+		<div class="bid shadow3">Bid = 
+			<input type="number" class="numInputs" id="bidd" placeholder="Input Bid" min="150" max="1750" step="10">
+		</div>
+		<br>
+		<div class="shadow3" id="ts">Trump Suit: 
+			<select class="dropdown" id="trump">
+				<option class="red">Hearts</option>
+				<option class="red">Diamonds</option>
+				<option class="black">Clubs</option>
+				<option class="black">Spades</option>
+			</select>
+		</div>
+		<br>
+		<div id="winners">
+			<canvas id="myCanvas"></canvas>
+		</div>
+		<br><br>
+		<div class="row">
+			<div class="col-xs-4 play btmbr ou1 nhover2 p1C p1e2" id="p1">
+			<span id="p11">Player</span> 1
+			</div>
+			<div class="col-xs-4 play btmbr nhover2 p2C p1e2" id="p2">
+			<span id="p12">Player</span> 2
+			</div>
+			<div class="col-xs-4 play btmbr ou2 nhover2 p3C" id="p3">
+			<span id="p13">Player</span> 3
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 btmbr ou1 bidt p1C p1e2">
+			<input type="radio" name="bidt" id="p1b">
+			Took bid
+			</div>
+			<div class="col-xs-4 btmbr bidt p2C p1e2">
+			<input type="radio" name="bidt" id="p2b">
+			Took bid
+			</div>
+			<div class="col-xs-4 btmbr ou2 bidt p3C">
+			<input type="radio" name="bidt" id=p3b>
+			Took bid
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 meld btmbr ou1 p1C p1e2">
+			Meld = <span id="p1ms">0</span>
+			</div>
+			<div class="col-xs-4 meld btmbr p2C p1e2">
+			Meld = <span id="p2ms">0</span>
+			</div>
+			<div class="col-xs-4 meld btmbr ou2 p3C">
+			Meld = <span id="p3ms">0</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 points btmbr ou1 p1C p1e2">
+			Points taken = <input class="numInputs claass" type="number" name="points" placeholder="P1 Points" min="0" max="25" id="p1points">
+			</div>
+			<div class="col-xs-4 points btmbr p2C p1e2">
+			Points taken = <input class="numInputs claass" type="number" name="points" placeholder="P2 Points" min="0" max="25" id="p2points">
+			</div>
+			<div class="col-xs-4 points btmbr ou2 p3C">
+			Points taken = <input class="numInputs claass" type="number" name="points" placeholder="P3 Points" min="0" max="25" id="p3points">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 p1e2 rs btmbr ou1 p1C">
+			Round Score = <span id="p1rs">0</span>
+			</div>
+			<div class="col-xs-4 p1e2 rs btmbr ou3 p2C">
+			Round Score = <span id="p2rs">0</span>
+			</div>
+			<div class="col-xs-4 rs btmbr ou2 p3C">
+			Round Score = <span id="p3rs">0</span>
+			</div>
+		</div>
+		<br>
+		<div class="new-btn">
+			<button id="rb" class="button">Add Round Score</button>
+            <button id="nh" class="button">New Hand</button>
+            <button type="reset" id="undo" class="button">Undo</button>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-xs-4 ts btmbr ou1 p1C p1e2">
+			Total Score = <span id="p1ts">0</span>
+			</div>
+			<div class="col-xs-4 ts btmbr ou3 p2C p1e2">
+			Total Score = <span id="p2ts">0</span>
+			</div>
+			<div class="col-xs-4 ts btmbr ou2 p3C">
+			Total Score = <span id="p3ts">0</span>
+			</div>
+		</div>
+        <br>
+        <button id="rg" class="button">Restart Game</button>
+		<br><br>
+		<div class="row">
+			<label class="col-xs-4 show-meld p1e2" id="p1rm"></label>
+			<label class="col-xs-4 show-meld p1e2" id="p2rm"></label>
+			<label class="col-xs-4 show-meld p3C" id="p3rm"></label>
+		</div>
+		<br>
+		<div class="row">
+			<label class="col-xs-3 show-meld p1e2a" id="round-number"></label>
+			<label class="col-xs-3 show-meld p1e2a" id="p1tm"></label>
+			<label class="col-xs-3 show-meld p1e2a" id="p2tm"></label>
+			<label class="col-xs-3 show-meld p3C" id="p3tm"></label>
+		</div>
+	</div>
+</div>
+	
+<div class="container col-xs-4 setup"></div>
+
+<div class="container col-xs-4 setup">
+    <div class="tutorial hidden">If the button shows 2 teams, then it is at 3 Players.</div>
+    <div class="tutorial hidden">If the button shows 3 players, then it is at 2 Teams.</div>
+    <div class="tutorial hidden">Click "Change color theme" to change color theme</div>
+	<span id="span">
+        Change to:
+        <button type="button" id="twop" class="button">2 teams</button>
+    </span>
+    <hr>
+    <div class="chgPn">
+        <input class="shadow" type="text" placeholder="Change Player 1 Name" id="chgP1N">
+    </div>
+    <div class="chgPn">
+        <input class="shadow" type="text" placeholder="Change Player 2 Name" id="chgP2N">
+    </div>
+    <div class="chgPn">
+        <input class="shadow p3C" type="text" placeholder="Change Player 3 Name" id="chgP3N">
+    </div>
+    <hr>
+    <div class="digit">
+		Play by 
+		<input type="radio" name="digit" id="Ones"> Ones or 
+		<input type="radio" name="digit" id="Tens" checked> Tens
+	</div>
+	<hr>
+	<div>
+		<span id="winwin">Winning Score = </span>  
+        <input type="number" class="numInputs" id="chg-w-score" placeholder="Change Winning Score" value="1500">
+    </div>
+	<hr>
+	<div class="col-xs-12 chg-m-score">Change Meld Points</div>
+	<br>
+	<div class="scores hidden">
+		Pinochle
+		<div><input type="number" class="meld-chg" id="pinpts" value="40"></div>
+	</div>
+	<div class="scores hidden">
+		Run
+		<div><input type="number" class="meld-chg" id="runpts" value="150"></div>
+	</div>
+	<div class="scores hidden">
+		Marriage
+		<div><input type="number" class="meld-chg" id="marpts" value="20"></div>
+	</div>
+	<div class="scores hidden">
+		Mar. of Trump 
+		<div><input type="number" class="meld-chg" id="martpts" value="40"></div>
+	</div>
+	<div class="scores hidden">
+		Aces Around 
+		<div><input type="number" class="meld-chg" id="aapts" value="100"></div>
+	</div>
+	<div class="scores hidden">
+		Kings Around 
+		<div><input type="number" class="meld-chg" id="kapts" value="80"></div>
+	</div>
+	<div class="scores hidden">
+		Queens Around 
+		<div><input type="number" class="meld-chg" id="qapts" value="60"></div>
+	</div>
+	<div class="scores hidden">
+		Jacks Around 
+		<div><input type="number" class="meld-chg" id="japts" value="40"></div>
+	</div>
+	<div class="scores hidden">
+		Nine of Trump 
+		<div><input type="number" class="meld-chg" id="ntpts" value="10"></div>
+	</div>
+	<div class="scores hidden">
+		Mar. Around 
+		<div><input type="number" class="meld-chg" id="marapts" value="240"></div>
+	</div>
+	<div class="scores hidden">
+		Double Pinochle 
+		<div><input type="number" class="meld-chg" id="dpinpts" value="400"></div>
+	</div>
+	<div class="scores hidden">
+		Double Run 
+		<div><input type="number" class="meld-chg" id="drunpts" value="1500"></div>
+	</div>
+	<div class="scores hidden">
+		Double Marriage
+		<div><input type="number" class="meld-chg" id="dmarpts" value="400"></div>
+	</div>
+	<div class="scores hidden">
+		Double Aces 
+		<div><input type="number" class="meld-chg" id="daapts" value="1000"></div>
+	</div>
+	<div class="scores hidden">
+		Double Kings 
+		<div><input type="number" class="meld-chg" id="dkapts" value="800"></div>
+	</div>
+	<div class="scores hidden">
+		Double Queens 
+		<div><input type="number" class="meld-chg" id="dqapts" value="600"></div>
+	</div>
+	<div class="scores hidden">
+		Double Jacks 
+		<div><input type="number" class="meld-chg" id="djapts" value="400"></div>
+	</div>
+	<br><hr><br>
+	<div class="start-game">
+		Start Game 
+	</div>
+	<br>
+	<div class="chg-theme">Change color theme</div>
+</div>
+
+<div class="container col-xs-4 setup"></div>
+
+<br><br>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="/pinochle/js/jquery.fireworks.js"></script>
+<script type="text/javascript" src="/pinochle/js/PinoclePts.js"></script>
+<script type="text/javascript" src="/pinochle/js/Pinochle2.js"></script>
+</body>
+</html>

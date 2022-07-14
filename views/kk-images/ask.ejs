@@ -1,0 +1,19 @@
+<%- include("../kk/partials/header") %>
+
+<div class="ui container">
+    <h1>Do You want to add an Image?</h1>
+    <div class="ui <% color() %> inverted segment">
+        <a href="/kk/recipes/<%= recipe.slug %>/image/new" class="ui <% color() %> button">Yes</a>
+        <a href="/kk/recipes/show/<%= recipe.slug %>" class="ui <% color() %> button">No</a>
+    </div>
+</div>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue 
+    <% } %>
+<% } %>
+
+<%- include("../kk/partials/footer") %>

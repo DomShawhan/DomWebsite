@@ -1,0 +1,88 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+kbd{
+    border:1px solid white;
+    font-size:1.2em;
+    box-shadow:1px 0 1px 0 #eee, 0 2px 0 2px #ccc, 0 2px 0 3px #444;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    margin:2px 3px;
+    padding:1px 5px;
+}
+
+canvas {
+    margin-top: 1.5rem;
+}
+
+#timer {
+    margin: auto;
+    font-size: 2rem;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.time-con {
+    width: 100%;
+    text-align: center;
+}
+
+.high-score-con {
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.canvas-con {
+    width: 100%;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.level-con {
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 1.25rem;
+}
+
+.instruction-box {
+    line-height: 2.5rem;
+    font-size: 1.5rem;
+    height: 400px;
+    width: 700px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 1);
+    color: #fff;
+    margin: 0 auto;
+    text-align: baseline;
+}
+
+.instruction {
+    height: 400px;
+    position: absolute;
+    top: 155px;
+    width: 100%;
+    text-align: center;
+}
+
+.btn.btn-instruction {
+    font-size: 1.25rem;
+    border: 2px dashed white;
+    border-radius: 25px;
+    color: white;
+    padding: 0 8px;
+    background-color: blue;
+    outline: none;
+    cursor: pointer;
+}
+
+header {
+    font-size: 2rem;
+}

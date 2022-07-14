@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/circle/circle.css">
+    <link rel="shortcut icon" type="image/png" href="/images/circle.png">
+    <title>Circle Path</title>
+</head>
+<body>
+    <header>Circle Path<button class="btn btn-instruction" onclick="toggleHidden()">Help</button></header>
+    <div class="level-con">
+        Level: <span id="level">1</span>/10
+    </div>
+    <div class="time-con">
+        <div id="timer">0.00</div>
+    </div>
+    <div class="canvas-con">
+        <canvas id="myCanvs" width="700" height="400" tabindex="1" autofocus></canvas>
+    </div>
+    <div class="high-score-con">
+        Your high score is: <span id="high-score"></span>
+    </div>
+    <div class="instruction hidden" id="instruct">
+        <div class="instruction-box">
+            Press <kbd>w</kbd>, <kbd>a</kbd>, <kbd>s</kbd>, or <kbd>d</kbd> keys to move the blue ball to avoid the red balls.<br>
+            Press <kbd>shift</kbd> to start each level.<br>
+            Survive 30 seconds to advance to the next level.<br>
+            Pass Level 10 to win!!
+        </div>
+    </div>
+    <script src="/circle/circle.js" type="text/javascript"></script>
+</body>
+</html>

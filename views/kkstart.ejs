@@ -1,0 +1,51 @@
+<html lang="en">
+    <head>
+        <title>Kramped Cookbook</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+        <link rel="stylesheet" href="/kk/stylesheets/main.css">
+        <link rel="stylesheet" href="/kk/stylesheets/show.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div class="ui container">
+            <br>
+            <div class="start">
+                <h2 class="ui <% color() %> center aligned icon header">
+                    <i class="circular utensil spoon icon"></i>
+                    Kramped Cookbook
+                </h2>
+            </div>
+            
+            <hr class="hr body">
+            <div class="ui center aligned body">
+                <p>
+                    <h3>Welcome to <em>Kramped Cookbook</em></h3>
+                    <h4>
+                        <span class="next2">
+                            If you have trouble finding recipes in your cookbook or recipe box, or just looking for a new recipe, then this is the site for you.
+                        </span>
+                        <br> <br>
+                        <div class="next3">
+                            <em>Kramped Cookbook</em> is a free to use, online place to store your recipes. It contains an option to keep your recipes private if you wish or you can make them public so that others may try them out. A search bar makes it easy to find the recipe you are looking for.
+                        </div>
+                        <br><br>
+                        <div class="next4">
+                            If you have any issues, use the error report box at the bottom right to report it. Please give a detailed description about the error and what caused it.
+                        </div>
+                    </h4>
+                </p>
+                <div>
+                    <a class="ui <% color() %> button" href="/kk/recipes">Get Started</a>
+                </div>
+            </div>
+        </div>
+
+        <% function color(){ %>
+            <% if(currentUser){ %>
+                <%= currentUser.color %>
+            <% } else { %>
+                blue 
+            <% } %>
+        <% } %>
+    </body>
+</html>

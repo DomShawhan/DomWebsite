@@ -1,0 +1,119 @@
+.circle {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #000000;
+}
+
+.select > .circle:hover {
+    transform: scale(125%);
+    cursor: pointer;
+}
+
+.small-circle{
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #000000;
+}
+
+.guess {
+    display: inline-block;
+}
+
+.result {
+    display: inline-block;
+}
+
+.red {
+    background-color: red !important;
+}
+
+.green {
+    background-color: green !important;
+}
+
+.blue {
+    background-color: blue !important;
+}
+
+.yellow {
+    background-color: yellow !important;
+}
+
+.black {
+    background-color: #000000 !important;
+}
+
+.white {
+    background-color: #ffffff !important;
+}
+
+.not-selected {
+    background-color: rgba(0, 0, 0, .4);
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.popup-container {
+    opacity: 1;
+    visibility: visible;
+    z-index: 50;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, .5);
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    transition: all 0.5s;
+}
+
+.popup {
+    opacity: 1;
+    visibility: visible;
+    z-index: 100;
+    position: absolute;
+    height: 50%;
+    width: 75%;
+    background-color: rgb(255, 255, 255);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.5s;
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#header {
+    font-size: 4rem;
+}
+
+#sub-header {
+    font-size: 2rem;
+}
+
+.btn {
+    padding: 3px;
+    border-radius: 15px;
+    border: 3px solid rgb(182, 165, 165);
+    border-style: outset;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: rgb(182, 165, 165);
+    border-color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+}

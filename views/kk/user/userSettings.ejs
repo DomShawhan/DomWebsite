@@ -1,0 +1,149 @@
+<%- include("../partials/header") %>
+
+<div class="ui container">
+    <div class="ui <% color() %> segment container">
+        <div class="ui top <% color() %> attached header">
+            <h1>Change Settings for <%= user.username %></h1>
+        </div>
+        <div class="ui <% color() %> attached segment">
+            <form action="/kk/user/<%= user.slug %>?_method=PUT" method="POST">
+                <div class="field">
+                    <label>Pick a color</label>
+                    <br><br>
+                    <div>
+                        <select class="ui <% color() %> inverted segment dropdown" name="user[color]" id="color">
+                            <option value="pink" <% checkColor("pink") %>  class="dropotions ui pink inverted segment">Pink</option>
+                            <option value="red" <% checkColor("red") %> class="dropotions ui red inverted segment">Red</option>
+                            <option value="orange" <% checkColor("orange") %> class="dropotions ui orange inverted segment">Orange</option>
+                            <option value="yellow" <% checkColor("yellow") %> class="dropotions ui yellow inverted segment">Yellow</option>
+                            <option value="olive" <% checkColor("olive") %> class="dropotions ui olive inverted segment">Olive</option>
+                            <option value="green" <% checkColor("green") %> class="dropotions ui green inverted segment">Green</option>
+                            <option value="teal" <% checkColor("teal") %> class="dropotions ui teal inverted segment">Teal</option>
+                            <option value="blue" <% checkColor("blue") %> class="dropotions ui blue inverted segment">Blue</option>
+                            <option value="violet" <% checkColor("violet") %> class="dropotions ui violet inverted segment">Violet</option>
+                            <option value="purple" <% checkColor("purple") %> class="dropotions ui purple inverted segment">Purple</option>
+                            <option value="brown" <% checkColor("brown") %> class="dropotions ui brown inverted segment">Brown</option>
+                            <option value="grey" <% checkColor("grey") %> class="dropotions ui grey inverted segment">Grey</option>
+                            <option value="black" <% checkColor("black") %> class="dropotions ui black inverted segment">Black</option>
+                          </select>
+                    </div>
+                </div>
+                <br><br>
+                <div class="field">
+                    <input class="ui <% color() %> button" name="submit" type="submit" value="Change Color">
+                    <div class="ui <% color() %> button cancel" onclick="document.location.reload()">Cancel</div>
+                </div>
+            </form>
+        </div>
+        <div class="ui top <% color() %> attached header">
+            <h1>Change Password</h1>
+        </div>
+        <div class="ui <% color()%> attached segment">
+            <form action="/kk/user/<%= user.slug %>/password" id="password-change" method="POST" onsubmit="checkPassword('password-change')">
+                <div class="field">
+                    <div class="ui large input">
+                        <label for="oldpass">Old Password</label>
+                        <input type="password" name="oldpassword" id="oldpass" placeholder="Old password" required/>
+                    </div>
+                </div>
+                <br>
+                <div class="field">
+                    <div class="ui large input">
+                        <label for="newpass">New Password</label>
+                        <input type="password" title="8 to 16 characters" id="newpass" name="newpassword" placeholder="New password" pattern=".{8,16}" required/>
+                    </div>
+                </div>
+                <br>
+                <div class="field">
+                    <div class="ui large input">
+                        <label for="confirmpass">Confirm Password</label>
+                        <input type="password" title="8 to 16 characters" id="confirmpass" name="confirmpassword" placeholder="Confirm password" pattern=".{8,16}" required/>
+                    </div>
+                </div>
+                <br>
+                <div class="field">
+                    <div class="hidden" id="pass-id">Confirm password does not match your new password.</div>
+                    <div class="ui large input">
+                        <button name="save" class="ui <% color() %> button">Save New Password</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="ui top <% color() %> attached header">
+            <h1>Share all recipes</h1>
+            <form action="/kk/recipes/share/all" method="post">
+                <div class="ui large input">
+                    <label for="email-share">Email</label>
+                    <input type="email" name="email" id="email-share"placeholder="email">
+                </div><br>
+                <input type="submit" class="ui <% color() %> button" value="Submit">
+            </form>
+        </div>
+        <div class="ui <% color()%> attached segment">
+            <p>Click on an email address to stop sharing with a user.</p>
+            <% currentUser.recSharedWith.forEach(sharedWith => { %>
+                <div id="<%= sharedWith.id %>">
+                    <a class="stop-a" onclick="deleteAllRecShare('<%= sharedWith.id %>', '<%= sharedWith.userEmail %>')"><%= sharedWith.userEmail %></a>
+                    <hr>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</div>
+
+<style>
+    .ui.input {
+        flex-direction: column;
+    }
+</style>
+    
+<script>
+let colorSel = document.getElementById("color"),
+    selected,
+    curcolor,
+    allColor = document.getElementsByClassName(colorSel.options[colorSel.selectedIndex].value),
+    color = colorSel.options[colorSel.selectedIndex].value;
+
+colorSel.addEventListener("change", (e) => {
+    selected = colorSel.options[colorSel.selectedIndex].value;
+    curcolor = colorSel.classList.item(1);
+    colorSel.classList.replace(curcolor, selected);
+    for(let i = 0; i < allColor.length; i++) {
+        if(!allColor[i].classList.contains("dropotions") && !allColor[i].classList.contains("cancel")) {
+            allColor[i].classList.replace(color, selected);
+            i--;
+        }
+    };
+    allColor = document.getElementsByClassName(colorSel.options[colorSel.selectedIndex].value);
+    color = selected;
+});
+
+let checkPassword = (id, e) => {
+    let pass = document.getElementById("newpass").value;
+    let confirmpass = document.getElementById("newpass").value;
+    if(pass !== confirmpass) {
+        document.getElementsByName("body")[0].style.backgroundColor = "red"
+        e.preventDefault();
+        let passSubmitData = document.getElementById("pass-id");
+        if(passSubmitData.classList.contains("hidden")) {
+            passSubmitData.classList.remove("hidden");
+        };
+    };
+};
+</script>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue
+    <% } %>
+<% } %>
+
+<% function checkColor(color) { %>
+    <% if (color === currentUser.color) { %>
+        selected 
+    <% } %>
+<% } %> 
+
+<%- include("../partials/footer") %>

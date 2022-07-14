@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Projects By Dom Homepage</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" type="image/png" href="/images/logo.png">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body>
+        
+
+        <style>
+            body {
+                overflow: hidden;
+            }
+            
+            main {
+                position: absolute;
+                height: 100vh;
+                width: 100vw;
+                top: 0;
+                text-align: center;
+                background-image: linear-gradient(to right bottom,rgba(19, 140, 253, 0.5),rgba(19, 140, 253, 0.5)), url("/images/logo.png");
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: top;
+                color: rgb(255, 255, 255);
+                transform: rotate(0);
+            }
+            /* Second Scene*/
+            #second-main {
+                right: 100vw;
+            }
+            /* Set animations for main elements */
+            .first-main-show {
+                animation: rotateBackgroundMain1 .5s linear 0s 1 forwards;
+            }
+
+            .second-main-show {
+                animation: rotateBackgroundMain2 .5s linear 1s 1 forwards;
+            }
+            /* Welcome message */ 
+            .header {
+                cursor: pointer;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-shadow: 1px 1px 2px black, 3px 3px 5px rgb(14, 110, 184);
+            }
+            /* Animation for Welcome header */
+            .header-dropdown {
+                animation: dropdownHeader 1.5s linear 0s 1 forwards;
+            }
+            /* "Click to continue sign." */
+            .slowly-show {
+                visibility: hidden;
+                opacity: 1;
+                animation: slowlyShow 1s linear 2s infinite alternate;
+            }
+            /* Make welcome sign leave upon click */
+            .header-disappear {
+                animation: dropdownHeader 1.5s linear 0s 1 reverse forwards;
+            }
+            /* make first scene disappear upon click */
+            .first-main-disappear {
+                animation: rotateBackgroundMain1 .25s linear .5s 1 reverse forwards;
+            }
+            /* Card set up for scene Two */
+            .card__face {
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                backface-visibility: hidden;
+                border-radius: 25px;
+            }
+
+            .card__face--front {
+                background-color: rgba(14, 110, 184, 0.279);
+            }
+
+            .card__face--back {
+                height: 100%;
+                background-color: rgba(14, 110, 184, 0.279);
+                transform: rotateY(180deg);
+                -ms-transform: rotateY(180deg);
+            }
+
+            .card {
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                position: relative;
+                transition: transform 1s;
+                transform-style: preserve-3d;
+                border-radius: 25px;
+            }
+
+            .card__header {
+                height: 33.33%;
+                background-color: blue;
+                border-bottom: 3px solid white;
+                text-shadow: 1px 1px 2px black;
+                border-radius: 25px 25px 0 0;
+                font-size: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .card__body {
+                height: 66.66%;
+            }
+
+            .card__body--img {
+                height: 100%;
+                max-width: 410px;
+            }
+
+            .card__body--item {
+                height: 20%;
+                background-color: rgba(14, 110, 184, 0.521);
+                border: 2px solid white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .card__body--item:last-child {
+                border-radius: 0 0 25px 25px ;
+            }
+
+            .card__body--item:first-child {
+                border-radius: 25px 25px 0 0;
+            }
+
+            .scene:hover .card {
+                transform: rotateY(180deg);
+            }
+            /* Container for card animation */
+            .scene {
+                width: 75vw;
+                height: 50vh;
+                perspective: 2000px;
+                margin: auto 0;
+                float: right;
+            }
+
+            .center-vertical {
+                height: 80vh;
+                width: 100%;
+                display: flex;
+                align-items: center;
+            }
+            /* Links for games */
+            .game-a:visited,
+            .game-a:link {
+                color: rgb(255, 255, 255);
+                text-shadow: 1px 1px 2px black, 3px 3px 5px rgb(14, 110, 184);
+                font-size: 2rem;
+            }
+            /* container for images on game link hover */
+            .img {
+                transform: scale(0);
+                position: absolute;
+                visibility: hidden;
+                opacity: 0;
+                transition: all 0.5s;
+                transition-delay: 1ms;
+                height: 200px;
+                width: fit-content;
+                background-color: white;
+                z-index: 100;
+                right: 75%;
+            }
+            /* image on game link hover */
+            .img-img {
+                height: 200px;
+            }
+            /* show image on game link hover */
+            .game-a:hover + .img {
+                visibility: visible;
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            .game {
+                font-size: 4rem;
+                height: 100%;
+                color: blue;
+                text-shadow: 1px 1px 2px black, 3px 3px 5px rgb(14, 110, 184), 5px 5px 3px rgb(20, 120, 204);;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            /* Link to Kramped Kookbook */
+            .btn {
+                transition: all 0.5s;
+                box-shadow: 2px 2px 4px black;
+                outline: none !important;
+            }
+
+            .btn:hover {
+                transform: scale(1.25);
+                box-shadow: 4px 4px 8px black !important;
+            }
+
+            .btn:active {
+                transform: scale(1.125);
+                box-shadow: 3px 3px 6px black !important;
+            }
+            /* Projects by dom on second main*/
+            .pbd {
+                display: flex;
+                height: 20vh;
+                align-items: center;
+                justify-content: center;
+            }
+            /* Animation for first main element */
+            @keyframes rotateBackgroundMain1 {
+                from { 
+                    transform: rotate(270deg);
+                    left: -100vw;
+                }
+                to { 
+                    transform: rotate(0);
+                    left: 0;
+                }
+            }
+            /* Animation for second main element */
+            @keyframes rotateBackgroundMain2 {
+                from { 
+                    transform: rotate(90deg);
+                    right: -100vw;
+                }
+                to { 
+                    transform: rotate(0);
+                    right: 0;
+                }
+            }
+            /* Welcome header animation */
+            @keyframes dropdownHeader {
+                0% {
+                    top: 125vh;
+                }
+
+                33.33% {
+                    top: 125vh;
+                }
+
+                95% {
+                    top: 40%;
+                }
+
+                100% {
+                    top: 50%;
+                }
+            }
+            /* "Click to continue" animation */
+            @keyframes slowlyShow{
+                from {
+                    visibility: hidden;
+                    opacity: 0;
+                }
+
+                to {
+                    visibility: visible;
+                    opacity: 1;
+                }
+            }
+
+            @media (max-width: 991px) {
+                .card {
+                    height: 35vh;
+                }
+
+                .scene {
+                    height: 35vh;
+                }
+            }
+        </style>
+
+        <main id="first-main" class="first-main-show" onclick="headerClick(event)">
+            <div class="header header-dropdown" id="header">
+                <h1>Welcome</h1>
+                <h4 class="slowly-show">(Click to continue)</h4>
+            </div>
+        </main>
+
+        <main id="second-main" class="d-none">
+            <h1 class="pbd">Projects By Dom</h1>
+            <div class="container">
+                <div class="row align-self-center justify-self-center">
+                    <div class="scene col-md-12 col-lg-6">
+                        <div class="card">
+                            <div class="card__face card__face--front">
+                                <div class="card__header">Kramped Kookbook</div>
+                                <div class="card__body">
+                                    <img src="/images/kk.png" class="card__body--img" alt="Kramped Kookbook">
+                                </div>
+                            </div>
+                            <div class="card__face card__face--back">
+                                <div class="card__header">Kramped Kookbook</div>
+                                <div class="card__body justify-content-center align-items-center d-flex">
+                                    <a href="/kk" class="btn btn-primary">Go</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scene col-md-12 col-lg-6">
+                        <div class="card"> 
+                            <div class="card__face card__face--front"><span class="game">Games</span></div>
+                            <div class="card__face card__face--back">
+                                <div class="card__body--item">
+                                    <a href="/games/missile.html" class="game-a">Air Defense</a>
+                                    <div class="img">
+                                        <img src="/images/missile.png" class="img-img" alt="missile">
+                                    </div>
+                                </div>
+                                <div class="card__body--item">
+                                    <a href="/games/circle.html" class="game-a">Circle Path</a>
+                                    <div class="img">
+                                        <img src="/images/circle_path.png" class="img-img" alt="missile">
+                                    </div>
+                                </div>
+                                <div class="card__body--item">
+                                    <a href="/games/break.html" class="game-a">CodeBreaker</a>
+                                    <div class="img">
+                                        <img src="/images/codebreaker.png" class="img-img" alt="missile">
+                                    </div>
+                                </div>
+                                <div class="card__body--item">
+                                    <a href="/games/football.html" class="game-a">Football</a>
+                                    <div class="img">
+                                        <img src="/images/football.png" class="img-img" alt="missile">
+                                    </div>
+                                </div>
+                                <div class="card__body--item">
+                                    <a href="/games/Pinochle.html" class="game-a">Pinochle Scorekeeper</a>
+                                    <div class="img">
+                                        <img src="/images/pinochle.png" class="img-img" alt="missile">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script lang="text/javascript">
+            const header = document.getElementById('header'),
+                  firstMain = document.getElementById('first-main'), 
+                  secondMain = document.getElementById('second-main'), 
+                  cards = document.getElementsByClassName('card');
+            
+            const headerClick = (e) => {
+                header.classList.remove('header-dropdown');
+                setTimeout(() => header.classList.add('header-disappear'), 1);
+                firstMain.classList.remove('first-main-show');
+                setTimeout(() => firstMain.classList.add('first-main-disappear'), 1);
+                secondMain.classList.remove('d-none');
+                setTimeout(() => secondMain.classList.add('second-main-show'), 1);
+                setTimeout(() => firstMain.classList.add('d-none'), 1000);
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,4 @@
+https://medium.com/@haxzie/dark-and-light-theme-switcher-using-css-variables-and-pure-javascript-zocada-dd0059d72fa2
+http://slicker.me/javascript/fireworks.htm
+https://www.jqueryscript.net/animation/Realistic-Fireworks-Animations-Using-jQuery-And-Canvas-fireworks-js.html
+https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_dropdown_hover

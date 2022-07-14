@@ -1,0 +1,43 @@
+<%- include("../kk/partials/header") %>
+
+<div class="ui container">
+    <h1>Add Image to <%= recipe.title %></h1>
+    <div class="ui <% color() %> inverted segment">
+        <form class="ui big inverted form" action="/kk/recipes/<%= recipe.slug %>/image" method="POST" enctype="multipart/form-data">
+            <div class="field">
+                <label>Image<br> <span style="font-size: .75em;"> Max of 5 images</span> <br> Only .jpg, .jpeg, and .png images are allowed.</label>
+                <input type="file" name="img" placeholder="image"  accept=".jpg, .jpeg, .png" id="image" onchange="validateFileType()">
+            </div>
+            <input type="submit" name="submit" class="ui <% color() %> button" value="Add Image" id="submit-form">
+            <a href="/kk/recipes/show/<%= recipe.slug %>" class="ui <% color() %> button" class="delete-form">View Recipe</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    function validateFileType(){
+        var fileName = document.getElementById("image").value;
+        var idxDot = fileName.lastIndexOf(".") + 1;
+        var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+        var fileSubmit = document.getElementById("submit-form");
+        if (extFile!=="jpg" && extFile!=="jpeg" && extFile!=="png"){
+            if(fileSubmit.disabled === false) {
+                fileSubmit.disabled = true;
+            };
+        } else {
+            if(fileSubmit.disabled === true) {
+                fileSubmit.disabled = false;
+            };
+        };
+    };
+</script>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue 
+    <% } %>
+<% } %>
+
+<%- include("../kk/partials/footer") %>

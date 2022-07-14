@@ -1,0 +1,434 @@
+<%- include("../partials/header") %>
+
+<div class="ui container">
+    <div class="ui top <% color() %> attached header">
+        <h1><%= recipe.title %>
+            <% if(currentUser){ %>
+                <% if(user.favorites.length === 0){ %>
+                    <form action="/kk/recipes/<%= recipe.slug %>/<%= currentUser.slug %>/favorites/" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart outline icon"></i> Add to Favorite</button></form>
+                <% } %>
+                <% for(var i = 0; i < user.favorites.length; i++) { %>
+                    <% if(user.favorites[i].recipe_id.toString() == recipe.slug.toString()){ %>
+                        <form action="/kk/recipes/<%= user.favorites[i].id %>/<%= currentUser.slug %>/favorites/delete" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart icon"></i>Remove from Favorites</button></form>
+                        <% break %>
+                    <% } else if(i == user.favorites.length - 1) { %>
+                        <form action="/kk/recipes/<%= recipe.slug %>/<%= currentUser.slug %>/favorites/" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart outline icon"></i> Add to Favorite</button></form>
+                    <% } %>
+                <% } %>
+            <% } else { %>
+                <form action="/kk/recipes/<%= recipe.slug %>/favorites" method="post" class="delete-form">
+                    <button class="ui basic <% color() %> button">
+                        <i class="heart outline icon"></i>
+                        Add Favorite
+                    </button>
+                </form>
+            <% } %>
+            <% if(currentUser && recipe.author.id.equals(currentUser._id)) { %>
+                &nbsp<a href="/kk/recipes/<%= recipe.slug %>/edit" class="ui <% color() %> button"><i class="edit icon"></i></a>
+            <% } %>
+            <div class="inline pull-right"><strong>Serves</strong> <%= recipe.serves %></div>
+        </h1>
+        <% if(recipe.gluten == true){ %>
+            <div class="pull-right">Gluten-Free&nbsp;&nbsp;</div>
+        <% } %>
+        <% if(recipe.dairy == true){ %>
+            <div class="pull-right">Dairy-Free&nbsp;&nbsp;</div>
+        <% } %> 
+        <% if(recipe.vegan == true){ %>
+            <div class="pull-right">Vegan&nbsp;&nbsp;</div>
+        <% } %> 
+        <% if(recipe.vegetarian == true){ %>
+            <div class="pull-right">Vegetarian&nbsp;&nbsp;</div>
+        <% } %> 
+        <h3>Description</h3>
+        <blockquote><%- recipe.description%></blockquote>
+
+    </div>
+    <% if(recipe.file === "type")  { %>
+        <div class="ui <% color() %> attached segment">
+            <h3>Ingredients</h3>
+            <ul>
+                <% recipe.ingredients.forEach(function(ingredient){ %>
+                    <li class="li"><%= ingredient.amount %> <strong>-</strong>  <%= ingredient.name %></li>
+                    <br>
+                <% }) %>
+            </ul>
+            <div>Category is <%= recipe.type %></div>
+            <hr>
+            <h3>Directions</h3>
+            <blockquote><%- recipe.directions %></blockquote>
+            <hr>
+            <% if(recipe.createdby) { %>
+                <div>By <strong><%= recipe.createdby %></strong></div>
+            <% } %>
+            <div>Submitted by <strong><img class="ui avatar image" src="<%= recipe.author.img %>" alt="userimg"><%= recipe.author.username %></strong>, on <strong><%= recipe.created.toDateString() %></strong></div>
+            <br>
+        </div>
+    <% } else if(recipe.file === "image") { %>
+        <div class="ui <% color() %> attached segment">
+            <div class="slideshow-container">
+                <% if (recipe.pics && recipe.pics.length > 0) { %>
+                    <% recipe.pics.forEach((pics, i) => { %>
+                        <div class="mySlides fade2" <%= i === 0 ? "style=\"display: block;\"" : "" %>  >
+                            <div class="numbertext"><%= i + 1 %>  / <%= recipe.pics.length %> </div>
+                            <img class="image" src="<%=pics.img %>" alt="image">
+                        </div>
+                    <% }) %> 
+                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                    <div style="text-align:center">
+                        <% recipe.pics.forEach((pics, i) => { %>
+                            <% var sa = "currentSlide(" + (i + 1) + ")"%>
+                            <span class="dot active" onclick="<%= sa %>"></span>
+                        <% }) %> 
+                    </div>
+                <% } %>
+            </div>
+            <% if(recipe.createdby) { %>
+                <div>By <strong><%= recipe.createdby %></strong></div>
+            <% } %>
+            <div>Submitted by <strong><img class="ui avatar image" src="<%= recipe.author.img %>" alt="userimg"><%= recipe.author.username %></strong>, on <strong><%= recipe.created.toDateString() %></strong></div>
+        </div>
+    <% } %>  
+    <% if(currentUser && (recipe.author.id.equals(currentUser._id) || currentUser.type === "mantainer")) { %>
+        <a href="/kk/recipes/<%= recipe.slug %>/edit" class="ui <% color() %> button">Edit Recipe</a>
+        <form action="/kk/recipes/<%= recipe.slug %>?_method=DELETE" method="POST" id="recipe-del" class="delete-form">
+            <button name="Delete recipe" class="ui red button">Delete Recipe</button>
+        </form>
+        <% if(recipe.file === "image") { %> 
+            <div style="font-size: 1.5rem; margin-top: 1.5rem; font-weight: 600;">
+                Go to edit page to delete recipe card pictures above this.
+            </div>
+        <% } %> 
+        <% if(recipe.img.length > 0) { %> 
+            <div style="font-size: 1.5rem; margin-top: 1.5rem; font-weight: 600;">
+                Hover over images below to click delete image button.
+            </div>
+            <% } %> 
+        <% } %>
+        <% if(currentUser && recipe.author.id.equals(currentUser._id)) { %> 
+            <% if(recipe.public === false) { %>
+                <a href="#show" class="ui <% color() %> button share-show">Share</a>
+                <div id="show">
+                    <div class="show-container">
+                        <div class="close-show pull-right">
+                            <a href="#" class="close-a">X</a>
+                        </div>
+                        <form action="/kk/recipes/<%= recipe.slug %>/share" method="post" class="show-form">
+                            <div class="form-group">
+                                <label for="email" class="share-label">Share</label>
+                                <div class="ui massive icon input">
+                                    <input type="email" name="email" id="email" required placeholder="Enter Email" style="margin-bottom: 1.5rem;">
+                                </div>
+                                <button class="ui <% color() %> button" style="display: block;">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <% if (recipe.shared.length > 0) { %>
+                    <a href="#stop" class="ui <% color() %> button share-show">Stop Sharing</a>
+
+                    <div id="stop">
+                        <div class="show-container">
+                            <div class="close-show pull-right">
+                                <a href="#" class="close-a">X</a>
+                            </div>
+                            <div class="ui container stop-container">
+                                <h1>Stop Sharing <em><%= recipe.title %></em> </h1>
+                                <h2>To stop sharing with a user, click their email address.</h2>
+                                <% recipe.shared.forEach(share => { %>
+                                    <div>
+                                        <a class="stop-a" onclick="postDelShare('/kk/recipe/<%= recipe.slug %>/shared/<%= share.userEmail %>', '<%= share.userEmail %>')"><%= share.userEmail %></a> 
+                                    </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %> 
+        <% } %> 
+        <br><br><br>
+    <% if(recipe.img.length > 0){ %>
+        <div class="ui centered grid">
+        <% recipe.img.forEach(function(image){ %>
+            <div class="four wide computer eight wide tablet sixteen wide mobile column col-image res-img">
+                <img src="<%= image.img %>" class="ui centered medium image">
+                <% if(currentUser && (recipe.author.id.equals(currentUser._id) || currentUser.type === "mantainer")) { %>
+                    <form onsubmit="delImgAsk(event)" id="img-<%= image.number %>" action="/kk/recipes/<%= recipe.slug %>/image/<%= image.number %>?_method=delete" method="POST" class="btn-image hidden">
+                        <button class="ui centered small red button">Delete Image</button>
+                    </form>
+                <% } %>
+            </div>
+        <% }) %>
+        </div> 
+    <% } else { %>
+        <div class="center">
+            <h2><i class="image icon"></i></h2>
+            <div>No Images Availiable</div>
+        </div>
+    <% } %>
+    <% if(currentUser && recipe.author.id.equals(currentUser._id)) { %>
+        <% if (recipe.img.length < 5) { %>
+            <a href="/kk/recipes/<%= recipe.slug %>/image/new" class="ui <% color() %> button">Add Image</a>
+        <% } %>
+    <% } %> 
+</div>
+
+<br><br>
+
+<div class="ui container">
+    <a class="ui <% color() %> button" href="/kk/recipes/<%- recipe.slug %>/comments/new">New Comment</a>
+</div>
+
+<br><br>
+
+<div class="ui container">
+    <% recipe.comments.forEach(function(comment){ %>
+        <div class="ui inverted <% color() %> segment">
+            <span class="pull-right"><%= moment(comment.created).fromNow() %></span>
+            <div class="header"><%= comment.author.username %></div>
+            <div>
+                <div class="center"><%= comment.title %></div>
+                <blockquote><%= comment.content %></blockquote>
+            </div>
+            <% if(currentUser && (comment.author.id.equals(currentUser._id) || currentUser.type === "mantainer")) { %>
+                <a href="/kk/recipes/<%= recipe.slug %>/comments/<%= comment._id %>/edit" class="ui <% color() %> button">Edit</a>
+                <form action="/kk/recipes/<%= recipe._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" class="delete-form">
+                    <button name="delete comment" class="ui red button">Delete</button>
+                </form>
+            <% } %>
+        </div>
+    <% }) %>
+</div>
+
+<br>
+
+<style>
+    .stop-a {
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+    #show {
+        visibility: hidden;
+        opacity: 0;
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.6);
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        transition: all .2s;
+    }
+    
+    .close-a:link,
+    .close-a:visited {
+        color: rgb(150, 0, 0);
+        font-size: 1.5rem;
+    }
+
+    .close-a:hover {
+        color: rgb(200, 0, 0);
+    }
+    
+    .show-container {
+        position: fixed;
+        height: 50vh;
+        width: 50vw;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(251, 251, 251, 0.8);
+        text-align: center;
+    }
+    
+    .share-label {
+        display: block;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .show-form {
+        display: flex;
+        align-items: center;
+        height: 50vh;
+        justify-content: center;
+    }
+
+    .stop-container {
+        overflow-y: scroll;
+    }
+    
+    #show:target{
+        visibility: visible;
+        opacity: 1;
+    }
+
+    #stop:target{
+        visibility: visible;
+        opacity: 1;
+    }
+
+    #stop {
+        visibility: hidden;
+        opacity: 0;
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.6);
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        transition: all .2s;
+    }
+
+    @-webkit-keyframes fade {
+      from {
+        opacity: .4; }
+      to {
+        opacity: 1; } }
+    
+    @keyframes fade {
+      from {
+        opacity: .4; }
+      to {
+        opacity: 1; } }
+    .slideshow-container {
+      max-width: 900px;
+      position: relative;
+      margin: auto; }
+    .mySlides {
+    display: none;
+    border: red; }
+    .fade2 {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s; }
+    .numbertext {
+    color: #e2e2e2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0; }
+    .prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: rgb(251, 255, 255);
+    background-color: rgba(36, 64, 68, 0.342);
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none; }
+
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px; }
+
+.prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.8); }
+    .image{
+    width: 100%;
+    }
+    .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #969696;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease; }
+    .active, .dot:hover {
+    background-color: #717171; }
+</style>
+
+<script src="/kk/javascript/check.js"></script>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue 
+    <% } %>
+<% } %>
+
+<%- include("../partials/footer") %>
+
+<script>
+    let postDelShare = (yourUrl, value) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", yourUrl, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() { // Call a function when the state changes.
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                if(xhr.responseText === "deleted") {
+                    document.location.reload();
+                } else {
+                    alert(xhr.responseText);
+                };
+            };
+        };
+        xhr.send(JSON.stringify({
+            value: value
+        }));
+    }
+</script>
+
+<script>
+let delRecipeForm;
+if(document.getElementById("recipe-del")) {
+    delRecipeForm = document.getElementById("recipe-del");
+    delRecipeForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if(confirm("You are deleting the recipe. Do you want to continue?")) {
+            delRecipeForm.submit();
+        };
+    });
+};
+</script>
+
+<script>
+    function delImgAsk(e) {
+        e.preventDefault();
+        if(confirm("You are deleting a image. Do you want to continue?")) {
+            document.getElementById(e.target.id).submit();
+        };
+    };
+</script>
+
+<script>
+var slideIndex = 1;
+showSlides(slideIndex);
+
+// Next/previous controls
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+// Thumbnail image controls
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+}
+</script>

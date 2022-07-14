@@ -1,0 +1,43 @@
+<%- include("../partials/header") %>
+
+<div class="ui container">
+    <div class="thirteen wide column">
+        <div class="ui <% color() %> segment container">
+            <div class="ui top <% color() %> attached header">
+                <h1><%= user.username %>'s Favorite Recipes</h1>
+                <div>
+                    <span class="ui buttons">
+                        <button name="down-order" class="ui <% color() %> icon button" id="down" disabled><i class="sort alphabet down icon"></i></button>
+                        <div class="or"></div>
+                        <button name="up-order" class="ui <% color() %> icon button" id="up"><i class="sort alphabet up icon"></i></button>
+                        </span>
+                </div>
+            </div>
+            <div class="ui <% color() %> attached segment">
+                <div class="start">
+                    <% user.favorites.forEach(function(fav){ %>
+                        <div class="container">
+                            <h1 class="data">
+                                <a href="/kk/recipes/show/<%= fav.recipe_id %>" class="h1a"><%= fav.recipe_name %></a>
+                            </h1>
+                            <form action="/kk/recipes/<%= fav._id %>/<%= currentUser.slug %>/favorites/delete" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart icon"></i> Delete Favorite</button></form>
+                            <hr>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/kk/javascript/main.js"></script>
+
+<% function color(){ %>
+    <% if(currentUser){ %>
+        <%= currentUser.color %>
+    <% } else { %>
+        blue
+    <% } %>
+<% } %>
+
+<%- include("../partials/footer") %>
