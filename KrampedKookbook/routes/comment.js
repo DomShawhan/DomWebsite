@@ -1,10 +1,10 @@
-var express = require("express");
-var router = express.Router({mergeParams: true});
+const express = require("express"),
+    router = express.Router({mergeParams: true});
 
-var Recipe = require("../models/recipes");
-var Comment = require("../models/comments");
-var middleware = require("../middleware");
-
+const Recipe = require("../models/recipes"),
+    Comment = require("../models/comments"),
+    middleware = require("../middleware");
+//Render new comment page
 router.get("/new", middleware.isLoggedIn, function(req, res){
     Recipe.findOne({"slug": req.params.id}, function(err, recipe){
         if(err || !recipe){
@@ -15,22 +15,22 @@ router.get("/new", middleware.isLoggedIn, function(req, res){
         };
     });
 });
-
+//post new comment
 router.post("/", middleware.isLoggedIn, function (req, res) {
     Recipe.findOne({"slug": req.params.id}, function (err, recipe) {
         if (err || !recipe) {
             req.flash("error", "Item not found.");;
             return res.redirect("/kk/recipes");
         } else {
-            var author = {
-                id: req.user._id,
-                username: req.user.username
-            };
-            var createComment = {
-                title: req.body.comment.title,
-                content: req.sanitize(req.body.comment.content),
-                author: author
-            };
+            const author = {
+                    id: req.user._id,
+                    username: req.user.username
+                },
+                createComment = {
+                    title: req.body.comment.title,
+                    content: req.sanitize(req.body.comment.content),
+                    author: author
+                };
             Comment.create(createComment, function (err, comment) {
                 if (err) {
                     req.flash("error", "Unable to create.");
@@ -48,7 +48,7 @@ router.post("/", middleware.isLoggedIn, function (req, res) {
         };
     });
 });
-
+//Render edit comment page
 router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, res){
     Comment.findById(req.params.comment_id, function(err, foundComment){
         if(err || !foundComment){
@@ -59,9 +59,9 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, function(req, 
         };
     });
 });
-
+//update comment
 router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res){
-    var editComment = {
+    const editComment = {
         title: req.body.comment.title,
         content: req.sanitize(req.body.comment.content)
     };
@@ -79,7 +79,7 @@ router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res){
         };
     });
 });
-
+//delete comment
 router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res){
     Comment.findByIdAndRemove(req.params.comment_id, function(err, foundComment){
         if(err){

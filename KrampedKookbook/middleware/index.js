@@ -1,12 +1,12 @@
-var middlewareObj = {};
-var Recipe = require("../models/recipes");
-var Comment = require("../models/comments");
+const middlewareObj = {};
+const Recipe = require("../models/recipes");
+const Comment = require("../models/comments");
 const favorites = require("../models/favorites");
 const User = require("../models/authentication");
-
+//check if current user owns recipe
 middlewareObj.checkRecipeOwnership = function(req, res, next) {
     if(req.isAuthenticated()){
-        Recipe.findOne({"slug.type": req.body.id}, function(err, foundRecipe){
+        Recipe.findOne({"slug": req.params.id}, function(err, foundRecipe){
             if(err || !foundRecipe){
                 req.flash("error", "Recipe not found");
                 return res.redirect("back");
@@ -22,7 +22,7 @@ middlewareObj.checkRecipeOwnership = function(req, res, next) {
         res.redirect("back");
     };
 };
-
+//check if current user owns the comment
 middlewareObj.checkCommentOwnership = function(req, res, next) {
     if(req.isAuthenticated()){
         Comment.findById(req.params.comment_id, function(err, foundComment){
@@ -41,7 +41,7 @@ middlewareObj.checkCommentOwnership = function(req, res, next) {
         res.redirect("back");
     };
 };
-
+//check if user is already logged in
 middlewareObj.isLoggedIn = function(req, res, next) {
     if(req.isAuthenticated()){
       return next();
@@ -49,7 +49,7 @@ middlewareObj.isLoggedIn = function(req, res, next) {
     req.flash("error", "Login First");
     res.redirect("/kk/login");
 };
-
+//confirm that the user is not logged in
 middlewareObj.notLoggedIn = (req, res, next) => {
     if(req.isAuthenticated()) {
         req.flash("error", "You are already logged in.");
@@ -58,7 +58,7 @@ middlewareObj.notLoggedIn = (req, res, next) => {
         next();
     };
 };
-
+//check if the recipe is a favorite
 middlewareObj.checkFavorites = (req, res, next) => {
     favorites.findById(req.params.id, (err, fav) => {
         if(err || !fav) {
@@ -68,25 +68,6 @@ middlewareObj.checkFavorites = (req, res, next) => {
             next();
         };
     });
-};
-
-middlewareObj.checkUser = (req, res, next) => {
-    User.findOne({"slug": req.params.id}, (err, user) => {
-        if(err || !user) {
-            req.flash("error", err);
-            return res.redirect("/kk/recipes");
-        } else {
-            next();
-        };
-    });
-};
-
-middlewareObj.checkUserEqualReqUser = (req, res , next) => {
-    if(req.user.slug === req.params.id) {
-        next();
-    } else {
-        res.redirect("back");
-    };
 };
 
 module.exports = middlewareObj;

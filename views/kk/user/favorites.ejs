@@ -20,7 +20,7 @@
                             <h1 class="data">
                                 <a href="/kk/recipes/show/<%= fav.recipe_id %>" class="h1a"><%= fav.recipe_name %></a>
                             </h1>
-                            <form action="/kk/recipes/<%= fav._id %>/<%= currentUser.slug %>/favorites/delete" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart icon"></i> Delete Favorite</button></form>
+                            <form action="/kk/recipes/<%= fav._id %>/favorites/delete" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart icon"></i> Delete Favorite</button></form>
                             <hr>
                         </div>
                     <% }) %>

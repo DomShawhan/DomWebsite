@@ -5,14 +5,14 @@
         <h1><%= recipe.title %>
             <% if(currentUser){ %>
                 <% if(user.favorites.length === 0){ %>
-                    <form action="/kk/recipes/<%= recipe.slug %>/<%= currentUser.slug %>/favorites/" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart outline icon"></i> Add to Favorite</button></form>
+                    <form action="/kk/recipes/<%= recipe.slug %>/favorites/" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart outline icon"></i> Add to Favorite</button></form>
                 <% } %>
                 <% for(var i = 0; i < user.favorites.length; i++) { %>
                     <% if(user.favorites[i].recipe_id.toString() == recipe.slug.toString()){ %>
-                        <form action="/kk/recipes/<%= user.favorites[i].id %>/<%= currentUser.slug %>/favorites/delete" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart icon"></i>Remove from Favorites</button></form>
+                        <form action="/kk/recipes/<%= user.favorites[i].id %>/favorites/delete" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart icon"></i>Remove from Favorites</button></form>
                         <% break %>
                     <% } else if(i == user.favorites.length - 1) { %>
-                        <form action="/kk/recipes/<%= recipe.slug %>/<%= currentUser.slug %>/favorites/" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart outline icon"></i> Add to Favorite</button></form>
+                        <form action="/kk/recipes/<%= recipe.slug %>/favorites/" method="post" class="delete-form"><button class="ui basic <% color() %> button"><i class="heart outline icon"></i> Add to Favorite</button></form>
                     <% } %>
                 <% } %>
             <% } else { %>

@@ -30,15 +30,15 @@
                         <div class="dropdown">
                             <div class="dropbtn">Signed in as <img class="ui avatar image" id="user-header-img" src="<%= currentUser.img.img %> " alt="user img"><%= currentUser.username %></div>
                             <div class="dropdown-content" style="background-color: <%= color() %>;">
-                                <a href="/kk/user/<%= currentUser.slug %>" class="item">My Recipes</a>
-                                <a href="/kk/user/<%= currentUser.slug %>/favorites" class="item">My Favorite Recipes</a>
-                                <a href="/kk/user/<%= currentUser.slug %>/profile" class="item">User Profile</a>
-                                <a href="/kk/user/<%= currentUser.slug %>/edit/settings" class="item">User Settings</a>
+                                <a href="/kk/user" class="item">My Recipes</a>
+                                <a href="/kk/user/favorites" class="item">My Favorite Recipes</a>
+                                <a href="/kk/user/profile" class="item">User Profile</a>
+                                <a href="/kk/user/edit/settings" class="item">User Settings</a>
                                 <% if(currentUser.messages !== undefined) { %> 
                                     <a href="#messages" class="item">My Messages <div class="message-num" id="message-num"><%= messageNum() %></div></a>
                                 <% } %> 
                                 <% if(currentUser.shared.length > 0 || currentUser.allShared.length > 0) { %>
-                                    <a href="/kk/user/<%= currentUser.slug %>/shared" class="item">Shared Recipes</a>
+                                    <a href="/kk/user/shared" class="item">Shared Recipes</a>
                                 <% } %>
                             </div>
                           </div> 

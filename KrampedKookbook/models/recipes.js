@@ -57,7 +57,7 @@ var recipeSchema = new mongoose.Schema({
         unique: true
     }
 });
-
+//generate a unique slug
 recipeSchema.pre('save', async function (next) {
     try {
         if (this.isNew || this.isModified("name")) {
@@ -72,7 +72,7 @@ recipeSchema.pre('save', async function (next) {
 var Recipe = mongoose.model("Recipe", recipeSchema);
 
 module.exports = Recipe;
-
+// functions to generate unique slug
 async function generateUniqueSlug(id, recipeName, slug) {
     try {
         // generate the initial slug

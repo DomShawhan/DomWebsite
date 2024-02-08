@@ -69,7 +69,7 @@ let deleteAllRecShare = (id, user) => {
 
 let userImgUpload = (id, value, e) => {
     let file = document.getElementById("image-input").files[0],
-        url = "/kk/user/" + id + "/img";
+        url = "/kk/user/img";
     e.preventDefault();
     if(file !== undefined) {
         let xhr = new XMLHttpRequest();

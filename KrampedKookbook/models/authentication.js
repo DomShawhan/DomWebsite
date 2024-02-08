@@ -42,7 +42,7 @@ var UserSchema = new mongoose.Schema({
         }
     ]
 });
-
+//generate slug for the user
 UserSchema.pre('save', async function (next) {
     try {
         // check if a new user is being saved, or if the user name is being modified
@@ -57,10 +57,10 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.plugin(passportLocalMongoose);
 
-var User = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
-
+//functions to generate unique slug
 async function generateUniqueSlug(id, userName, slug) {
     try {
         // generate the initial slug

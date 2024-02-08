@@ -1,22 +1,15 @@
-const express = require("express");
-const router = express.Router();
-const passport = require("passport");
-const Recipe = require("../models/recipes");
-const User = require("../models/authentication");
-const recipes = require("../models/recipes");
-const async = require("async");
-const nodemailer = require("nodemailer");
-const Share = require("../models/share");
-const crypto = require("crypto");
-const middleware = require("../middleware");
-const { route } = require("./recipes");
-const favorites = require("../models/favorites");
-const { isNull } = require("util");
-const messages = require("../functions/messages");
-const { truncate } = require("fs");
-const { checkUserEqualReqUser } = require("../middleware");
-const { ESTALE } = require("constants");
+const express = require("express"),
+    router = express.Router(),
+    async = require("async"),
+    nodemailer = require("nodemailer");
 
+const middleware = require("../middleware"),
+    messages = require("../functions/messages");
+
+const Recipe = require("../models/recipes"),
+    Share = require("../models/share"),
+    User = require("../models/authentication");
+//share recipe
 router.post("/recipes/:id/share", middleware.checkRecipeOwnership, (req, res) => {
     Recipe.findOne({"slug": req.params.id}, async (err, recipe) => {
         if(err) {
@@ -110,8 +103,8 @@ router.post("/recipes/:id/share", middleware.checkRecipeOwnership, (req, res) =>
     });
 });
 //GET ALL SHARED RECIPES
-router.get("/user/:id/shared", middleware.isLoggedIn, middleware.checkUserEqualReqUser, (req, res) => {
-    User.findOne({"slug": req.params.id}, async(err, user) => {
+router.get("/user/shared", middleware.isLoggedIn, (req, res) => {
+    User.findOne({"slug": req.user.slug}, async(err, user) => {
         if (err) {
             req.flash("error", err.message);
             res.redirect("back");
@@ -139,7 +132,7 @@ router.get("/user/:id/shared", middleware.isLoggedIn, middleware.checkUserEqualR
         };
     });
 });
-
+//share all recipes
 router.post("/recipe/:id/shared/:email", middleware.checkRecipeOwnership, async(req, res) => {
     Recipe.findOne({"slug": req.params.id}, async (err, recipe) => {
         if(err || !recipe) {
@@ -315,7 +308,7 @@ router.post("/recipes/share/all/delete/:id", middleware.isLoggedIn, async (req, 
                 } else {
                     for (let i = 0; i < req.user.recSharedWith.length; i++) {
                         const recShared = req.user.recSharedWith[i];
-                        if(recShared.userEmail === user.email) {
+                        if(recShared.userEmail === req.params.id) {
                             req.user.recSharedWith.splice(i, 1);
                             i--;
                         };
