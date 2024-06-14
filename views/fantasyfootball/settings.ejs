@@ -1,0 +1,45 @@
+<%- include("./header") %>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Position</th>
+            <th scope="col">Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% data.settings.roster_positions.forEach(pos => { %>
+            <tr>
+                <td><%= pos.position %></td>
+                <td><%= pos.count %></td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Points per</th>
+            <th scope="col">Bonus 1</th>
+            <th scope="col">Bonus 2</th>
+            <th scope="col">Bonus 3</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% settings.forEach(set => { %>
+            <% if(typeof set.stat != "undefined") { %>
+                <tr>
+                    <td><%= set.category.name %></td>
+                    <td><%= set.stat.stat.value %></td>
+                    <% if(typeof set.stat.stat.bonuses != "undefined") { %>
+                        <% set.stat.stat.bonuses.forEach(bon => { %>
+                            <td><%= bon.bonus.points %> @ <%= bon.bonus.target %></td>
+                        <% }) %>
+                    <% } %>
+                </tr>
+            <% } %>
+        <% }); %>
+    </tbody>
+</table>
+<%- include("./footer") %>

@@ -12,6 +12,7 @@ var express = require("express"),
   passportLocalMongoose = require("passport-local-mongoose"),
   flash = require("connect-flash"),
   expressSanitizer = require("express-sanitizer"),
+  football = require("./football/index.js"),
   cookbook = require("./KrampedKookbook/app.js");
 
 app.use(express.static("public"));
@@ -27,6 +28,7 @@ app.get("/games/:id", (req, res) => {
   res.sendFile(__dirname + "/views/" + gamePath);
 });
 
+app.use(football);
 app.use("/kk", cookbook);
 let port = process.env.PORT || 1850;
 

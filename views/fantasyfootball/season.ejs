@@ -1,0 +1,45 @@
+<%- include("./header") %>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Team</th>
+            <th scope="col">Total Points</th>
+            <th scope="col">PPG</th>
+            <th scope="col">Min</th>
+            <th scope="col">Max</th>
+            <th scope="col">Std Dev</th>
+            <th scope="col">Adjusted Average</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% data.forEach(team=> { %>
+            <tr>
+                <td scope="row">
+                    <% if(team.logo_url.length> 0) { %>
+                        <img height="25px" width="25px" src="<%= team.logo_url %>">
+                        <% } %>
+                            <%= team.name %>
+                </td>
+                <td class="total">
+                    <%= team.seasonTotal.toFixed(2) %>
+                </td>
+                <td class="avg">
+                    <%= team.avg.toFixed(2) %>
+                </td>
+                <td class="min">
+                    <%= team.min.toFixed(2) %>
+                </td>
+                <td class="max">
+                    <%= team.max.toFixed(2) %>
+                </td>
+                <td class="stddev">
+                    <%= team.stddev.toFixed(2) %>
+                </td>
+                <td class="adjavg">
+                    <%= team.avgMinusTopAndBottom25Percent.toFixed(2) %>
+                </td>
+            </tr>
+            <% }); %>
+    </tbody>
+</table>
+<%- include("./footer") %>
