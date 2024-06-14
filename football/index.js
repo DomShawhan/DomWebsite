@@ -47,23 +47,25 @@ app.get('/league/settings/:leagueid', async (req, res) => {
 
 app.get('/league/season/:leagueid', async (req, res) => {
     try {
-        //Get settings
-        const settings = await leagueSettings(req.params.leagueid);
-        // Get list of teams
-        const data = await app.yf.league.teams(req.params.leagueid);
+        //Get standings
+        const standings = await app.yf.league.standings(req.params.leagueid);
         const returnData = [];
-        for (let i = 0; i < data.teams.length; i++) {
+        for (let i = 0; i < standings.standings.length; i++) {
             let team = {
-                logo_url: data.teams[i].team_logos[0].url,
-                team_key: data.teams[i].team_key,
-                team_id: data.teams[i].team_id,
-                name: data.teams[i].name,
+                logo_url: standings.standings[i].team_logos[0].url,
+                team_key: standings.standings[i].team_key,
+                team_id: standings.standings[i].team_id,
+                name: standings.standings[i].name,
                 weeklyScores: [],
                 seasonTotal: 0,
                 min: 0,
                 max: 0,
                 avg: 0,
                 stddev: 0,
+                wins: 0,
+                losses: 0,
+                ties: 0,
+                rank: standings.standings[i].standings.rank,
                 avgMinusTopAndBottom25Percent: 0
             };
             returnData.push(team);
@@ -82,14 +84,29 @@ app.get('/league/season/:leagueid', async (req, res) => {
                             r.avg = ss.average(r.weeklyScores);
                             r.stddev = ss.standardDeviation(r.weeklyScores);
                             r.avgMinusTopAndBottom25Percent = avgMinusTopAndBottom25Percent(r.weeklyScores);
+                            if(matchup.is_tied == 1) {
+                                r.ties++;
+                            } else if(matchup.winner_team_key == team.team_key) {
+                                r.wins++;
+                            } else {
+                                r.losses++;
+                            }
                         }
                     });
                 });
             });
         }
         let leagueStats = [];
+        let leagueRecord = {
+            wins: 0,
+            losses: 0,
+            ties: 0
+        }
 
         returnData.forEach(rdata => {
+            leagueRecord.wins += rdata.wins;
+            leagueRecord.losses += rdata.losses;
+            leagueRecord.ties += rdata.ties;
             leagueStats.push(...rdata.weeklyScores);
         });
 
@@ -104,7 +121,11 @@ app.get('/league/season/:leagueid', async (req, res) => {
             max: ss.max(leagueStats),
             avg: ss.average(leagueStats),
             stddev: ss.standardDeviation(leagueStats),
-            avgMinusTopAndBottom25Percent: avgMinusTopAndBottom25Percent(leagueStats)
+            avgMinusTopAndBottom25Percent: avgMinusTopAndBottom25Percent(leagueStats),
+            wins: leagueRecord.wins,
+            losses: leagueRecord.losses,
+            ties: leagueRecord.ties,
+            rank: 0
         };
         returnData.push(leagueData);
 
@@ -115,7 +136,7 @@ app.get('/league/season/:leagueid', async (req, res) => {
     }
 })
 
-app.get('/auth/yahoo', (req, res) => {
+/*app.get('/auth/yahoo', (req, res) => {
     app.yf.auth(res);
 })
 
@@ -127,7 +148,7 @@ app.get('/auth/yahoo/callback', (req, res) => {
 
         return res.redirect("/league");
     })
-})
+})*/
 
 function avgMinusTopAndBottom25Percent(array) {
     if(Array.isArray(array)) {
