@@ -1,0 +1,115 @@
+<%- include("./header") %>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">Team</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% teams.forEach(team=> { %>
+            <tr>
+                <td class="rank">
+                    <%= team.rank != 0 ? team.rank : '' %>
+                </td>
+                <td scope="row">
+                    <% if(team.logo_url.length> 0) { %>
+                        <img height="25px" width="25px" src="<%= team.logo_url %>">
+                    <% } %>
+                    <%= team.name %>
+                    <% if(team.rank == 1) { %>
+                        <i class="bi bi-trophy-fill first-place"></i>
+                    <% } else if(team.rank == 2) { %>
+                        <i class="bi bi-trophy-fill second-place"></i>
+                    <% } if(team.rank == 3) { %>
+                        <i class="bi bi-trophy-fill third-place"></i>
+                    <% } %>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Position</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">PPG</th>
+                                <th scope="col">Min</th>
+                                <th scope="col">Max</th>
+                                <th scope="col">Std Dev</th>
+                                <th scope="col">Adjusted Average</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>QB</td>
+                                <td><%= team.qbTotal.toFixed(2) %></td>
+                                <td><%= team.avg.qb.toFixed(2) %></td>
+                                <td><%= team.min.qb.toFixed(2) %></td>
+                                <td><%= team.max.qb.toFixed(2) %></td>
+                                <td><%= team.stddev.qb.toFixed(2) %></td>
+                                <td><%= team.avgMinusTopAndBottom25Percent.qb.toFixed(2) %></td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>RB</td>
+                                <td><%= team.rbTotal.toFixed(2) %></td>
+                                <td><%= team.avg.rb.toFixed(2) %></td>
+                                <td><%= team.min.rb.toFixed(2) %></td>
+                                <td><%= team.max.rb.toFixed(2) %></td>
+                                <td><%= team.stddev.rb.toFixed(2) %></td>
+                                <td><%= team.avgMinusTopAndBottom25Percent.rb.toFixed(2) %></td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>WR</td>
+                                <td><%= team.wrTotal.toFixed(2) %></td>
+                                <td><%= team.avg.wr.toFixed(2) %></td>
+                                <td><%= team.min.wr.toFixed(2) %></td>
+                                <td><%= team.max.wr.toFixed(2) %></td>
+                                <td><%= team.stddev.wr.toFixed(2) %></td>
+                                <td><%= team.avgMinusTopAndBottom25Percent.wr.toFixed(2) %></td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>TE</td>
+                                <td><%= team.teTotal.toFixed(2) %></td>
+                                <td><%= team.avg.te.toFixed(2) %></td>
+                                <td><%= team.min.te.toFixed(2) %></td>
+                                <td><%= team.max.te.toFixed(2) %></td>
+                                <td><%= team.stddev.te.toFixed(2) %></td>
+                                <td><%= team.avgMinusTopAndBottom25Percent.te.toFixed(2) %></td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>K</td>
+                                <td><%= team.kTotal.toFixed(2) %></td>
+                                <td><%= team.avg.k.toFixed(2) %></td>
+                                <td><%= team.min.k.toFixed(2) %></td>
+                                <td><%= team.max.k.toFixed(2) %></td>
+                                <td><%= team.stddev.k.toFixed(2) %></td>
+                                <td><%= team.avgMinusTopAndBottom25Percent.k.toFixed(2) %></td>
+                            </tr>
+                            <tr>
+                                <td scope="row"></td>
+                                <td>DEF</td>
+                                <td><%= team.dTotal.toFixed(2) %></td>
+                                <td><%= team.avg.d.toFixed(2) %></td>
+                                <td><%= team.min.d.toFixed(2) %></td>
+                                <td><%= team.max.d.toFixed(2) %></td>
+                                <td><%= team.stddev.d.toFixed(2) %></td>
+                                <td><%= team.avgMinusTopAndBottom25Percent.d.toFixed(2) %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<%- include("./footer") %>

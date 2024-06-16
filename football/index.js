@@ -8,15 +8,8 @@ const YahooFantasy = require('yahoo-fantasy');
 app.yf = new YahooFantasy(
     process.env.YClientID,
     process.env.YClientSecret,
-    app.tokenCallback,
     process.env.YRedirect
 );
-app.tokenCallback = function ({ access_token, refresh_token }) {
-    return new Promise((resolve, reject) => {
-        app.accesstoken = access_token;
-        return resolve();
-    });
-};
 
 async function leagueSettings(leagueid) {
     try {
@@ -133,6 +126,237 @@ app.get('/league/season/:leagueid', async (req, res) => {
     } catch (e) {
         console.log(e)
         res.send(e);
+    }
+})
+
+app.get('/league/positions/:leagueid', async (req, res) => {
+    try {
+        const standings = await app.yf.league.standings(req.params.leagueid);
+        const updatedTeams = [];
+
+        standings.standings.forEach(async (team, index) => {
+            let newTeam = {
+                logo_url: team.team_logos[0].url,
+                team_key: team.team_key,
+                team_id: team.team_id,
+                name: team.name,
+                rank: team.standings.rank,
+                qbWeekly: [],
+                qbTotal: 0,
+                rbWeekly: [],
+                rbTotal: 0,
+                wrWeekly: [],
+                wrTotal: 0,
+                teWeekly: [],
+                teTotal: 0,
+                kWeekly: [],
+                kTotal: 0,
+                dWeekly: [],
+                dTotal: 0,
+                min: {},
+                max: {},
+                avg: {},
+                stddev: {},
+                avgMinusTopAndBottom25Percent: {}
+            }
+
+            updatedTeams.push(newTeam);
+        });
+        for(let w = 1; w < 18; w++) {
+            for(let i = 0; i < updatedTeams.length; i++) {
+                let team = updatedTeams[i];
+                const week = await app.yf.roster.players(team.team_key, w.toString(), ['stats']);
+                const weekTotals = {
+                    qb: 0,
+                    rb: 0,
+                    wr: 0,
+                    te: 0,
+                    k: 0,
+                    d: 0
+                }
+
+                for(let p = 0; p < week.roster.length; p++ ) {
+                    let player = week.roster[p];
+                    if(player.selected_position != 'BN' && player.selected_position != 'IR') {
+                        switch(player.primary_position) {
+                            case 'QB': {
+                                weekTotals.qb += Number(player.player_points.total);
+                                break;
+                            }
+                            case 'RB': {
+                                weekTotals.rb += Number(player.player_points.total);
+                                break;
+                            }
+                            case 'WR': {
+                                weekTotals.wr += Number(player.player_points.total);
+                                break;
+                            }
+                            case 'TE': {
+                                weekTotals.te += Number(player.player_points.total);
+                                break;
+                            }
+                            case 'K': {
+                                weekTotals.k += Number(player.player_points.total);
+                                break;
+                            }
+                            case 'DEF': {
+                                weekTotals.d += Number(player.player_points.total);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                team.qbWeekly.push(weekTotals.qb);
+                team.qbTotal += weekTotals.qb;
+                team.rbWeekly.push(weekTotals.rb);
+                team.rbTotal += weekTotals.rb;
+                team.wrWeekly.push(weekTotals.wr);
+                team.wrTotal += weekTotals.wr;
+                team.teWeekly.push(weekTotals.te);
+                team.teTotal += weekTotals.te;
+                team.kWeekly.push(weekTotals.k);
+                team.kTotal += weekTotals.k;
+                team.dWeekly.push(weekTotals.d);
+                team.dTotal += weekTotals.d;
+            }
+        }
+        let league = {
+            logo_url: '',
+            team_key:'',
+            team_id: '',
+            name: 'League',
+            rank: '',
+            qbWeekly: [],
+            qbTotal: 0,
+            rbWeekly: [],
+            rbTotal: 0,
+            wrWeekly: [],
+            wrTotal: 0,
+            teWeekly: [],
+            teTotal: 0,
+            kWeekly: [],
+            kTotal: 0,
+            dWeekly: [],
+            dTotal: 0,
+            min: {},
+            max: {},
+            avg: {},
+            stddev: {},
+            avgMinusTopAndBottom25Percent: {}
+        }
+        for(let i = 0; i < updatedTeams.length; i++) {
+            league.qbWeekly.push(...updatedTeams[i].qbWeekly);
+            league.rbWeekly.push(...updatedTeams[i].rbWeekly);
+            league.wrWeekly.push(...updatedTeams[i].wrWeekly);
+            league.teWeekly.push(...updatedTeams[i].teWeekly);
+            league.kWeekly.push(...updatedTeams[i].kWeekly);
+            league.dWeekly.push(...updatedTeams[i].dWeekly);
+
+            league.qbTotal += updatedTeams[i].qbTotal;
+            league.rbTotal += updatedTeams[i].rbTotal;
+            league.wrTotal += updatedTeams[i].wrTotal;
+            league.teTotal += updatedTeams[i].teTotal;
+            league.kTotal += updatedTeams[i].kTotal;
+            league.dTotal += updatedTeams[i].dTotal;
+
+            updatedTeams[i].min = {
+                qb: ss.min(updatedTeams[i].qbWeekly),
+                rb: ss.min(updatedTeams[i].rbWeekly),
+                wr: ss.min(updatedTeams[i].wrWeekly),
+                te: ss.min(updatedTeams[i].teWeekly),
+                k: ss.min(updatedTeams[i].kWeekly),
+                d: ss.min(updatedTeams[i].dWeekly),
+            };
+
+            updatedTeams[i].max = {
+                qb: ss.max(updatedTeams[i].qbWeekly),
+                rb: ss.max(updatedTeams[i].rbWeekly),
+                wr: ss.max(updatedTeams[i].wrWeekly),
+                te: ss.max(updatedTeams[i].teWeekly),
+                k: ss.max(updatedTeams[i].kWeekly),
+                d: ss.max(updatedTeams[i].dWeekly),
+            };
+
+            updatedTeams[i].avg = {
+                qb: ss.average(updatedTeams[i].qbWeekly),
+                rb: ss.average(updatedTeams[i].rbWeekly),
+                wr: ss.average(updatedTeams[i].wrWeekly),
+                te: ss.average(updatedTeams[i].teWeekly),
+                k: ss.average(updatedTeams[i].kWeekly),
+                d: ss.average(updatedTeams[i].dWeekly),
+            };
+
+            updatedTeams[i].stddev = {
+                qb: ss.standardDeviation(updatedTeams[i].qbWeekly),
+                rb: ss.standardDeviation(updatedTeams[i].rbWeekly),
+                wr: ss.standardDeviation(updatedTeams[i].wrWeekly),
+                te: ss.standardDeviation(updatedTeams[i].teWeekly),
+                k: ss.standardDeviation(updatedTeams[i].kWeekly),
+                d: ss.standardDeviation(updatedTeams[i].dWeekly),
+            };
+
+            updatedTeams[i].avgMinusTopAndBottom25Percent = {
+                qb: avgMinusTopAndBottom25Percent(updatedTeams[i].qbWeekly),
+                rb: avgMinusTopAndBottom25Percent(updatedTeams[i].rbWeekly),
+                wr: avgMinusTopAndBottom25Percent(updatedTeams[i].wrWeekly),
+                te: avgMinusTopAndBottom25Percent(updatedTeams[i].teWeekly),
+                k: avgMinusTopAndBottom25Percent(updatedTeams[i].kWeekly),
+                d: avgMinusTopAndBottom25Percent(updatedTeams[i].dWeekly),
+            };
+        }
+
+        league.min = {
+            qb: ss.min(league.qbWeekly),
+            rb: ss.min(league.rbWeekly),
+            wr: ss.min(league.wrWeekly),
+            te: ss.min(league.teWeekly),
+            k: ss.min(league.kWeekly),
+            d: ss.min(league.dWeekly),
+        };
+
+        league.max = {
+            qb: ss.max(league.qbWeekly),
+            rb: ss.max(league.rbWeekly),
+            wr: ss.max(league.wrWeekly),
+            te: ss.max(league.teWeekly),
+            k: ss.max(league.kWeekly),
+            d: ss.max(league.dWeekly),
+        };
+
+        league.avg = {
+            qb: ss.average(league.qbWeekly),
+            rb: ss.average(league.rbWeekly),
+            wr: ss.average(league.wrWeekly),
+            te: ss.average(league.teWeekly),
+            k: ss.average(league.kWeekly),
+            d: ss.average(league.dWeekly),
+        };
+
+        league.stddev = {
+            qb: ss.standardDeviation(league.qbWeekly),
+            rb: ss.standardDeviation(league.rbWeekly),
+            wr: ss.standardDeviation(league.wrWeekly),
+            te: ss.standardDeviation(league.teWeekly),
+            k: ss.standardDeviation(league.kWeekly),
+            d: ss.standardDeviation(league.dWeekly),
+        };
+
+        league.avgMinusTopAndBottom25Percent = {
+            qb: avgMinusTopAndBottom25Percent(league.qbWeekly),
+            rb: avgMinusTopAndBottom25Percent(league.rbWeekly),
+            wr: avgMinusTopAndBottom25Percent(league.wrWeekly),
+            te: avgMinusTopAndBottom25Percent(league.teWeekly),
+            k: avgMinusTopAndBottom25Percent(league.kWeekly),
+            d: avgMinusTopAndBottom25Percent(league.dWeekly),
+        };
+
+        updatedTeams.push(league);
+
+        res.render('fantasyfootball/positions', { teams: updatedTeams });
+    } catch (e) {
+        console.log(e)
+        res.redirect('/');
     }
 })
 
