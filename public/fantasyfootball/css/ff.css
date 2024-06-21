@@ -9,3 +9,13 @@
 .third-place {
     color: #b08d57;
 }
+
+.green {
+    background-color: #119e26 !important;
+    color: #ffffff !important;
+}
+
+.red {
+    background-color: #a80c0c !important;
+    color: #ffffff !important;
+}

@@ -38,6 +38,204 @@ app.get('/league/settings/:leagueid', async (req, res) => {
     }
 })
 
+app.get('/league/season/:leagueid1/:leagueid2', async (req, res) => {
+    try {
+        //Get standings
+        const standings1 = await app.yf.league.standings(req.params.leagueid1);
+        const standings2 = await app.yf.league.standings(req.params.leagueid2);
+        const season1 = [];
+        const season2 = [];
+        for (let i = 0; i < standings1.standings.length; i++) {
+            let team = {
+                logo_url: standings1.standings[i].team_logos[0].url,
+                team_key: standings1.standings[i].team_key,
+                team_id: standings1.standings[i].team_id,
+                name: standings1.standings[i].name,
+                weeklyScores: [],
+                seasonTotal: 0,
+                min: 0,
+                max: 0,
+                avg: 0,
+                stddev: 0,
+                wins: 0,
+                losses: 0,
+                ties: 0,
+                rank: standings1.standings[i].standings.rank,
+                avgMinusTopAndBottom25Percent: 0
+            };
+            season1.push(team);
+        }
+        for (let i = 0; i < standings2.standings.length; i++) {
+            let team = {
+                logo_url: standings2.standings[i].team_logos[0].url,
+                team_key: standings2.standings[i].team_key,
+                team_id: standings2.standings[i].team_id,
+                name: standings2.standings[i].name,
+                weeklyScores: [],
+                seasonTotal: 0,
+                min: 0,
+                max: 0,
+                avg: 0,
+                stddev: 0,
+                wins: 0,
+                losses: 0,
+                ties: 0,
+                rank: standings2.standings[i].standings.rank,
+                avgMinusTopAndBottom25Percent: 0
+            };
+            season2.push(team);
+        }
+        for (let w = 1; w < 18; w++) {
+            const weeklyScoreboard1 = await app.yf.league.scoreboard(req.params.leagueid1, w.toString());
+            const weeklyScoreboard2 = await app.yf.league.scoreboard(req.params.leagueid2, w.toString());
+
+            weeklyScoreboard1.scoreboard.matchups.forEach(async matchup => {
+                matchup.teams.forEach(async team => {
+                    season1.forEach(async r => {
+                        if (r.team_id === team.team_id) {
+                            r.weeklyScores.push(Number(team.points.total));
+                            r.seasonTotal += Number(team.points.total);
+                            r.min = ss.min(r.weeklyScores);
+                            r.max = ss.max(r.weeklyScores);
+                            r.avg = ss.average(r.weeklyScores);
+                            r.stddev = ss.standardDeviation(r.weeklyScores);
+                            r.avgMinusTopAndBottom25Percent = avgMinusTopAndBottom25Percent(r.weeklyScores);
+                            if(matchup.is_tied == 1) {
+                                r.ties++;
+                            } else if(matchup.winner_team_key == team.team_key) {
+                                r.wins++;
+                            } else {
+                                r.losses++;
+                            }
+                        }
+                    });
+                });
+            });
+
+            weeklyScoreboard2.scoreboard.matchups.forEach(async matchup => {
+                matchup.teams.forEach(async team => {
+                    season2.forEach(async r => {
+                        if (r.team_id === team.team_id) {
+                            r.weeklyScores.push(Number(team.points.total));
+                            r.seasonTotal += Number(team.points.total);
+                            r.min = ss.min(r.weeklyScores);
+                            r.max = ss.max(r.weeklyScores);
+                            r.avg = ss.average(r.weeklyScores);
+                            r.stddev = ss.standardDeviation(r.weeklyScores);
+                            r.avgMinusTopAndBottom25Percent = avgMinusTopAndBottom25Percent(r.weeklyScores);
+                            if(matchup.is_tied == 1) {
+                                r.ties++;
+                            } else if(matchup.winner_team_key == team.team_key) {
+                                r.wins++;
+                            } else {
+                                r.losses++;
+                            }
+                        }
+                    });
+                });
+            });
+        }
+        let leagueStats1 = [];
+        let leagueRecord1 = {
+            wins: 0,
+            losses: 0,
+            ties: 0
+        }
+
+        let leagueStats2 = [];
+        let leagueRecord2 = {
+            wins: 0,
+            losses: 0,
+            ties: 0
+        }
+
+        season1.forEach(rdata => {
+            leagueRecord1.wins += rdata.wins;
+            leagueRecord1.losses += rdata.losses;
+            leagueRecord1.ties += rdata.ties;
+            leagueStats1.push(...rdata.weeklyScores);
+        });
+
+        season2.forEach(rdata => {
+            leagueRecord2.wins += rdata.wins;
+            leagueRecord2.losses += rdata.losses;
+            leagueRecord2.ties += rdata.ties;
+            leagueStats2.push(...rdata.weeklyScores);
+        });
+
+        let leagueData1 = {
+            logo_url: '',
+            team_key: '',
+            team_id: '',
+            name: 'League',
+            weeklyScores: leagueStats1,
+            seasonTotal: ss.sum(leagueStats1),
+            min: ss.min(leagueStats1),
+            max: ss.max(leagueStats1),
+            avg: ss.average(leagueStats1),
+            stddev: ss.standardDeviation(leagueStats1),
+            avgMinusTopAndBottom25Percent: avgMinusTopAndBottom25Percent(leagueStats1),
+            wins: leagueRecord1.wins,
+            losses: leagueRecord1.losses,
+            ties: leagueRecord1.ties,
+            rank: 0
+        };
+
+        season1.push(leagueData1);
+
+        let leagueData2 = {
+            logo_url: '',
+            team_key: '',
+            team_id: '',
+            name: 'League',
+            weeklyScores: leagueStats2,
+            seasonTotal: ss.sum(leagueStats2),
+            min: ss.min(leagueStats2),
+            max: ss.max(leagueStats2),
+            avg: ss.average(leagueStats2),
+            stddev: ss.standardDeviation(leagueStats2),
+            avgMinusTopAndBottom25Percent: avgMinusTopAndBottom25Percent(leagueStats2),
+            wins: leagueRecord2.wins,
+            losses: leagueRecord2.losses,
+            ties: leagueRecord2.ties,
+            rank: 0
+        };
+
+        season2.push(leagueData2);
+
+        let returnData = [];
+
+        season1.forEach(t => {
+            let team2 = season2.find(team => team.team_id == t.team_id);
+
+            let data = {
+                logo_url: t.logo_url,
+                team_key: t.team_key,
+                team_id: t.team_id,
+                name: t.name + ' / ' + team2.name,
+                weeklyScores: [...t.weeklyScores, ...team2.weeklyScores],
+                seasonTotal: t.seasonTotal - team2.seasonTotal,
+                min: t.min - team2.min,
+                max: t.max - team2.max,
+                avg: t.avg - team2.avg,
+                stddev: t.stddev - team2.stddev,
+                avgMinusTopAndBottom25Percent: t.avgMinusTopAndBottom25Percent - team2.avgMinusTopAndBottom25Percent,
+                wins: t.wins - team2.wins,
+                losses: t.losses - team2.losses,
+                ties: t.ties - team2.ties,
+                rank: 0
+            }
+
+            returnData.push(data);
+        })
+        
+        res.render('fantasyfootball/seasoncompare', {data: returnData});
+    } catch (e) {
+        console.log(e)
+        res.send(e);
+    }
+})
+
 app.get('/league/season/:leagueid', async (req, res) => {
     try {
         //Get standings
@@ -133,7 +331,7 @@ app.get('/league/positions/:leagueid', async (req, res) => {
     try {
         const standings = await app.yf.league.standings(req.params.leagueid);
         const updatedTeams = [];
-
+        // Populate the teams
         standings.standings.forEach(async (team, index) => {
             let newTeam = {
                 logo_url: team.team_logos[0].url,
@@ -162,6 +360,7 @@ app.get('/league/positions/:leagueid', async (req, res) => {
 
             updatedTeams.push(newTeam);
         });
+        // Get stats for each week from 1 - 17
         for(let w = 1; w < 18; w++) {
             for(let i = 0; i < updatedTeams.length; i++) {
                 let team = updatedTeams[i];
@@ -221,6 +420,7 @@ app.get('/league/positions/:leagueid', async (req, res) => {
                 team.dTotal += weekTotals.d;
             }
         }
+        // For League stats
         let league = {
             logo_url: '',
             team_key:'',
@@ -259,7 +459,7 @@ app.get('/league/positions/:leagueid', async (req, res) => {
             league.teTotal += updatedTeams[i].teTotal;
             league.kTotal += updatedTeams[i].kTotal;
             league.dTotal += updatedTeams[i].dTotal;
-
+            //Calculate positional stats
             updatedTeams[i].min = {
                 qb: ss.min(updatedTeams[i].qbWeekly),
                 rb: ss.min(updatedTeams[i].rbWeekly),
@@ -305,7 +505,7 @@ app.get('/league/positions/:leagueid', async (req, res) => {
                 d: avgMinusTopAndBottom25Percent(updatedTeams[i].dWeekly),
             };
         }
-
+        //Calculate stats for the league total
         league.min = {
             qb: ss.min(league.qbWeekly),
             rb: ss.min(league.rbWeekly),
