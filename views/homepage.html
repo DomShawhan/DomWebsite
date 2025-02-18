@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
     <head>
         <title>Projects By Dom Homepage</title>
@@ -390,4 +390,290 @@
             })
         </script>
     </body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Projects By Dom Homepage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/6796bde55f.js"></script>
+    <link rel="shortcut icon" type="image/png" href="/images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <style>
+        section {
+            position: relative;
+            width: 100%;
+            height: calc(100vh + 5px);
+        }
+
+        header {
+            position: relative;
+        }
+
+        #header-main-container {
+            z-index: 99;
+            width: 100%;
+            height: calc(75vh + 5px);
+            background: black;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
+        }
+
+        #header-main {
+            z-index: 100;
+            width: 100%;
+            height: 75vh;
+            background: linear-gradient(225deg, rgb(41, 168, 207), rgb(166, 222, 236));
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
+        }
+
+        #main-container {
+            top: 50%;
+            left: 50%;
+            width: 85%;
+            height: 85%;
+            position: relative;
+            transform: translate(-50%, -50%);
+            color: rgb(255, 255, 255);
+            text-align: center;
+        }
+
+        #section-main-container {
+            z-index: 98;
+            top: 50%;
+            left: 50%;
+            width: 85%;
+            height: 85%;
+            position: relative;
+            transform: translate(-50%, -50%);
+            color: rgb(255, 255, 255);
+            text-align: center;
+        }
+
+        #header-h1 {
+            font-size: 5rem;
+            font-family: Palatino;
+            top: 50%;
+            left: 50%;
+            position: relative;
+            transform: translate(-50%, -50%);
+            text-shadow: 1px 1px 0px rgb(81, 141, 138), 2px 2px 2px rgb(41, 95, 93);
+        }
+        
+        #header-welcome {
+            font-size: 2rem;
+            font-family: Palatino;
+            top: 50%;
+            left: 50%;
+            position: relative;
+            transform: translate(-50%, -50%);
+            text-shadow: 1px 1px 0px rgb(81, 141, 138), 2px 2px 2px rgb(41, 95, 93);
+        }
+
+        #section-1 {
+            height: 100vh;
+            z-index: 97;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
+            background: linear-gradient(335deg, rgb(33, 133, 208), rgb(166, 222, 236));
+        }
+
+        #section-1-container {
+            margin-top: -25vh;
+            z-index: 96;
+            width: 100%;
+            height: calc(100vh + 5px);
+            background: black;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
+        }
+
+        #section-h1 {
+            font-size: 5rem;
+            font-family: Palatino;
+            top: 50%;
+            left: 50%;
+            position: relative;
+            transform: translate(-50%, -25%);
+            text-shadow: 1px 1px 0px rgb(81, 141, 138), 2px 2px 2px rgb(41, 95, 93);
+        }
+
+        .section-link:link, .section-link:visited, .section-link:hover {
+            transition: all .5s;
+            color: rgb(255, 255, 255);
+            text-shadow: 1px 1px 0px rgb(81, 141, 138), 2px 2px 2px rgb(41, 95, 93);
+            text-decoration: none;
+        }
+
+        .section-link:hover {
+            letter-spacing: .01em;
+            color: rgb(136, 153, 252);
+            text-shadow: 1px 1px 0px rgb(255, 255, 255), 2px 2px 2px rgb(41, 95, 93);
+            text-decoration: none;
+        }
+
+        .section-link:active {
+            letter-spacing: -.02em;
+        }
+
+        #section-2 {
+            margin-top: -25vh;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
+            background: linear-gradient(225deg, rgb(33, 94, 208), rgb(166, 222, 236));
+        }
+
+        .games-container {
+            margin-top: -25vh;
+            width: 100%;
+            height: calc(100vh + 5px);
+            background: black;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
+        }
+
+        .games {
+            height: 100vh;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%);
+            background: linear-gradient(335deg, rgb(33, 133, 208), rgb(166, 222, 236));
+        }
+
+        .games-con {
+            top: 50%;
+            left: 50%;
+            width: 85%;
+            height: 85%;
+            position: relative;
+            transform: translate(-50%, -50%);
+            color: rgb(255, 255, 255);
+            text-align: center;
+        }
+
+        .game-header {
+            top: 50%;
+            left: 50%;
+            width: 85%;
+            height: 85%;
+            position: relative;
+            transform: translate(-50%, -50%);
+            color: rgb(255, 255, 255);
+            text-align: center;
+        }
+
+        .game-h1 {
+            font-size: 5rem;
+            font-family: Palatino;
+            top: 50%;
+            left: 50%;
+            position: relative;
+            transform: translate(-50%, -25%);
+            text-shadow: 1px 1px 0px rgb(81, 141, 138), 2px 2px 2px rgb(41, 95, 93);
+        }
+
+        #game-1 {
+            z-index: 94;
+        }
+
+        #game-2 {
+            z-index: 92;
+        }
+
+        #game-3 {
+            z-index: 90;
+        }
+
+        #game-4 {
+            z-index: 88;
+        }
+
+        #game-5 {
+            z-index: 86;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        #game-1-game {
+            background: linear-gradient(225deg, rgb(29, 114, 179), rgb(166, 222, 236));
+        }
+
+        #game-2-game {
+            background: linear-gradient(335deg, rgb(25, 100, 156), rgb(166, 222, 236));
+        }
+
+        #game-3-game {
+            background: linear-gradient(225deg, rgb(27, 105, 165), rgb(166, 222, 236));
+        }
+
+        #game-4-game {
+            background: linear-gradient(335deg, rgb(16, 89, 145), rgb(166, 222, 236));
+        }
+
+        #game-final {
+            background: linear-gradient(225deg, rgb(9, 74, 124), rgb(166, 222, 236));
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+        
+
+
+    </style>
+    <header id="header-main-container">
+        <div id="header-main">
+            <div id="main-container">
+                <h2 id="header-welcome">Welcome to</h2>
+                <h1 id="header-h1">Projects by Dom</h1>
+            </div>
+        </div>
+    </header>
+    <section id="section-1-container">
+        <div id="section-1">
+            <div id="section-main-container">
+                <h1 id="section-h1"><a href="/kk" class="section-link">Kramped Kookbook</a></h1>
+            </div>
+        </div>
+    </section>
+    <section class="games-container" id="game-1">
+        <div class="games" id="game-1-game">
+            <div class="games-con">
+                <h1 class="game-h1">
+                    <a href="/games/missile.html" class="section-link">Air Defense</a>
+                </h1>
+            </div>
+        </div>
+    </section>
+    <section class="games-container" id="game-2">
+        <div class="games" id="game-2-game">
+            <div class="games-con">
+                <h1 class="game-h1">
+                    <a href="/games/circle.html" class="section-link">Circle Path</a>
+                </h1>
+            </div>
+        </div>
+    </section>
+    <section class="games-container" id="game-3">
+        <div class="games" id="game-3-game">
+            <div class="games-con">
+                <h1 class="game-h1">
+                    <a href="/games/break.html" class="section-link">Code Breaker</a>
+                </h1>
+            </div>
+        </div>
+    </section>
+    <section class="games-container" id="game-4">
+        <div class="games" id="game-4-game">
+            <div class="games-con">
+                <h1 class="game-h1">
+                    <a href="/games/football.html" class="section-link">Football</a>
+                </h1>
+            </div>
+        </div>
+    </section>
+    <section class="games-container" id="game-5">
+        <div class="games" id="game-final">
+            <div class="games-con">
+                <h1 class="game-h1">
+                    <a href="/games/pinochle.html" class="section-link">Pinochle Scorekeeper</a>
+                </h1>
+            </div>
+        </div>
+    </section>
+</body>
 </html>

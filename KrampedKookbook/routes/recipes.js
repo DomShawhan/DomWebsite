@@ -7,7 +7,7 @@ const Recipe = require("../models/recipes"),
 const middleware = require("../middleware");
 
 //Index
-router.get("/", function(req, res){
+router.get("/", (req, res) => {
     const numQuery = parseInt(req.query.number),
         numCook = req.cookies.number;
 
@@ -21,30 +21,36 @@ router.get("/", function(req, res){
     }
     const pageQuery = parseInt(req.query.page),
         pageNumber = pageQuery ? pageQuery : 1;
-    Recipe.find({"public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-        Recipe.countDocuments({"public": true}).exec(function (err, count) {
+
+    Recipe.find({"public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).then((found) => {
+        Recipe.countDocuments({"public": true}).then((count) => {
+            console.log(found);
+            res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: "All", special: [] });
+        }).catch((err) => {
             if(err){
                 res.send(err);
-            } else {
-                res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: "All", special: [] });
-            };
+            }
         });
+    }).catch((err) => {
+        if(err){
+            res.send(err);
+        }
     });
 });
 //search
-router.get("/search/", function(req, res){
-    Recipe.find({"title" : { "$regex": req.query.search, "$options": "i" }, "public": true}, function(err, recipes){
+router.get("/search/", (req, res) => {
+    Recipe.find({"title" : { "$regex": req.query.search, "$options": "i" }, "public": true}).then((recipes) => {
+        res.render("kk/recipes/search", {recipes: recipes, search: req.query.search});
+    }).catch((err) => {
         if(err){
             req.flash("error", "Something Went Wrong");
             res.redirect("/kk/recipes");
-        } else {
-            res.render("kk/recipes/search", {recipes: recipes, search: req.query.search});
-        };
+        }
     });
 });
 //sort by type
-router.get("/sort/:id", function(req, res){
-    if(req.params.id == "Appetizer" || req.params.id == "Bread" ||req.params.id == "Dessert" ||req.params.id == "Icing" || req.params.id == "Main") {
+router.get("/sort/:id", (req, res) => {
+    if(req.params.id == "Appetizer" || req.params.id == "Bread" || req.params.id == "Dessert" || req.params.id == "Icing" || req.params.id == "Main") {
         const numQuery = parseInt(req.query.number),
             numCook = req.cookies.number;
         
@@ -58,22 +64,27 @@ router.get("/sort/:id", function(req, res){
         }
         const pageQuery = parseInt(req.query.page),
             pageNumber = pageQuery ? pageQuery : 1;
-        Recipe.find({"type" : req.params.id, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-            Recipe.countDocuments({"type" : req.params.id, "public": true}).exec(function (err, count) {
+        Recipe.find({"type" : req.params.id, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).then((found) => {
+            Recipe.countDocuments({"type" : req.params.id, "public": true}).then((count) => {
+                res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: req.params.id, special: []});
+            }).catch((err) => {
                 if(err){
-                    req.flash("error", err)
+                    req.flash("error", "Something Went Wrong");
                     res.redirect("/kk/recipes");
-                } else {
-                    res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: req.params.id, special: []});
-                };
+                }
             });
+        }).catch((err) => {
+            if(err){
+                req.flash("error", "Something Went Wrong");
+                res.redirect("/kk/recipes");
+            }
         });
     } else {
         res.redirect("/kk/recipes");
     };
 });
 //sort by type and attribute
-router.get("/sort/:id/:di", function(req, res){
+router.get("/sort/:id/:di", (req, res) => {
     if(req.params.id == "Appetizer" || req.params.id == "Bread" ||req.params.id == "Dessert" ||req.params.id == "Icing" || req.params.id == "Main") {
         if(req.params.di == "gluten" || req.params.di == "dairy" || req.params.di == "vegan" || req.params.di == "vegetarian") {
             const numQuery = parseInt(req.query.number),
@@ -88,52 +99,23 @@ router.get("/sort/:id/:di", function(req, res){
                 perPage = 20;
             }
             const pageQuery = parseInt(req.query.page),
-                pageNumber = pageQuery ? pageQuery : 1;
-            if(req.params.di == "gluten") {
-                Recipe.find({"type": req.params.id, "gluten": true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-                    Recipe.countDocuments({"type": req.params.id, "gluten": true, "public": true}).exec(function (err, count) {
-                        if(err){
-                            req.flash("error", err)
-                            res.redirect("/kk/recipes");
-                        } else {
-                            res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: req.params.id, special: req.params.di});
-                        };
-                    });
+           
+            pageNumber = pageQuery ? pageQuery : 1;
+            Recipe.find({"type": req.params.id, [req.params.di]: true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).then((found) => {
+                Recipe.countDocuments({"type": req.params.id, "gluten": true, "public": true}).exec((count) => {
+                    res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: req.params.id, special: req.params.di});
+                }).catch((err) => {
+                    if(err){
+                        req.flash("error", "Something Went Wrong");
+                        res.redirect("/kk/recipes");
+                    }
                 });
-            } else if(req.params.di == "dairy") {
-                Recipe.find({"type": req.params.id, "dairy": true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-                    Recipe.countDocuments({"type": req.params.id, "dairy": true, "public": true}).exec(function (err, count) {
-                        if(err){
-                            req.flash("error", err)
-                            res.redirect("/kk/recipes");
-                        } else {
-                            res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: req.params.id, special: req.params.di});
-                        };
-                    });
-                });
-            } else if(req.params.di == "vegan") {
-                Recipe.find({"type": req.params.id, "vegan": true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-                    Recipe.countDocuments({"type": req.params.id, "vegan": true, "public": true}).exec(function (err, count) {
-                        if(err){
-                            req.flash("error", err)
-                            res.redirect("/kk/recipes");
-                        } else {
-                            res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: req.params.id, special: req.params.di});
-                        };
-                    });
-                });
-            } else if(req.params.di == "vegetarian") {
-                Recipe.find({"type": req.params.id, "vegetarian": true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-                    Recipe.countDocuments({"type": req.params.id, "vegetarian": true, "public": true}).exec(function (err, count) {
-                        if(err){
-                            req.flash("error", err)
-                            res.redirect("/kk/recipes");
-                        } else {
-                            res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: req.params.id, special: req.params.di});
-                        };
-                    });
-                });
-            };
+            }).catch((err) => {
+                if(err){
+                    req.flash("error", "Something Went Wrong");
+                    res.redirect("/kk/recipes");
+                }
+            });
         } else {
             res.redirect("/kk/recipes");
         };
@@ -142,7 +124,7 @@ router.get("/sort/:id/:di", function(req, res){
     };
 });
 //sort by attribute
-router.get("/sor/:di", function(req, res){
+router.get("/sor/:di", (req, res) => {
     const numQuery = parseInt(req.query.number),
         numCook = req.cookies.number;
         
@@ -157,61 +139,36 @@ router.get("/sor/:di", function(req, res){
     const pageQuery = parseInt(req.query.page),
         pageNumber = pageQuery ? pageQuery : 1;
     if(req.params.di == "gluten" || req.params.di == "dairy" || req.params.di == "vegan" || req.params.di == "vegetarian") {
-        if(req.params.di == "gluten") {
-            Recipe.find({"gluten": true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-                Recipe.countDocuments({"gluten": true, "public": true}).exec(function (err, count) {
-                    if(err){
-                        req.flash("error", err)
-                        res.redirect("/kk/recipes");
-                    } else {
-                        res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: "All", special: req.params.di});
-                    };
-                });
+        Recipe.find({[req.params.di]: true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).then((found) => {
+            Recipe.countDocuments({"gluten": true, "public": true}).then((count) => {
+                res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: "All", special: req.params.di});
+            }).catch((err) => {
+                if(err){
+                    req.flash("error", "Something Went Wrong");
+                    res.redirect("/kk/recipes");
+                }
             });
-        } else if(req.params.di == "dairy") {
-            Recipe.find({"dairy": true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-                Recipe.countDocuments({"dairy": true, "public": true}).exec(function (err, count) {
-                    if(err){
-                        req.flash("error", err)
-                        res.redirect("/kk/recipes");
-                    } else {
-                        res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: "All", special: req.params.di});
-                    };
-                });
-            });
-        } else if(req.params.di == "vegan") {
-            Recipe.find({"vegan": true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-                Recipe.countDocuments({"vegan": true, "public": true}).exec(function (err, count) {
-                    if(err){
-                        req.flash("error", err)
-                        res.redirect("/kk/recipes");
-                    } else {
-                        res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: "All", special: req.params.di});
-                    };
-                });
-            });
-        } else if(req.params.di == "vegetarian") {
-            Recipe.find({"vegetarian": true, "public": true}).sort("normal").skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, found) {
-                Recipe.countDocuments({"vegetarian": true, "public": true}).exec(function (err, count) {
-                    if(err){
-                        req.flash("error", err)
-                        res.redirect("/kk/recipes");
-                    } else {
-                        res.render("kk/recipes/index", {recipes: found, perPage: perPage, current: pageNumber, pages: Math.ceil(count / perPage), kind: "All", special: req.params.di});
-                    };
-                });
-            });
-        };
+        }).catch((err) => {
+        if(err){
+            req.flash("error", "Something Went Wrong");
+            res.redirect("/kk/recipes");
+        }
+    }).catch((err) => {
+        if(err){
+            req.flash("error", "Something Went Wrong");
+            res.redirect("/kk/recipes");
+        }
+    });
     } else {
         res.redirect("/kk/recipes");
     };
 });
 //New
-router.get("/new/new", middleware.isLoggedIn, function(req, res){
+router.get("/new/new", middleware.isLoggedIn, (req, res) => {
     res.render("kk/recipes/new");
 });
 //Create
-router.post("/", middleware.isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, (req, res) => {
     req.body.recipe.description = req.sanitize(req.body.recipe.description);
     req.body.recipe.directions = req.sanitize(req.body.recipe.directions);
     const title = req.body.recipe.title,
@@ -249,64 +206,52 @@ router.post("/", middleware.isLoggedIn, function(req, res){
         };
     };
     const newRecipe = { file: "type", normal: normal, shared: [], createdby: createdby, title: title, type: type, author: author,  description: description,  directions: directions, serves: serves, public: public, gluten: gluten, dairy: dairy, vegan: vegan, vegetarian: vegetarian, img: [], ingredients: ingredient };
-    Recipe.create(newRecipe, function(err, newRecipe){
+    Recipe.create(newRecipe).then((newRecipe) => {
+        req.flash("success", "Recipe Created");
+        res.redirect("/kk/recipes/" + newRecipe.slug + "/ask");
+    }).catch((err) => {
         if(err){
-            req.flash("error", "Something went wrong.");
-            return res.redirect("back");
-        } else {
-            req.flash("success", "Recipe Created");
-            res.redirect("/kk/recipes/" + newRecipe.slug + "/ask");
-        };
+            req.flash("error", "Something Went Wrong");
+            res.redirect("/kk/recipes");
+        }
     });
 });
 
 //Show
-router.get("/show/:id", function(req,res){
-    Recipe.findOne({"slug": req.params.id}).populate("ingredients").populate("comments").populate("img").exec(function(err, found){
-        if(err || !found) {
-            req.flash("error", err);
-            return res.redirect("/kk/recipes");
-        } else {
+router.get("/show/:id", (req, res) => {
+    Recipe.findOne({"slug": req.params.id}).populate("ingredients").populate("comments").populate("img").then((found) => {
             if(found.public === true) {
-                if(req.user){
-                    User.findOne({"username": req.user.username}).populate("favorites").exec(function(err, user){
-                        if(err){
-                            req.flash("error", err);
-                            return res.redirect("back");
-                        } else {
-                            res.render("kk/recipes/show", {recipe: found, user: user});
-                        };
+                if(req.user) {
+                    User.findOne({"username": req.user.username}).populate("favorites").then((user) => {
+                        res.render("kk/recipes/show", {recipe: found, user: user});
+                    }).catch((err) => {
+                        req.flash("error", err);
+                        return res.redirect("/kk/recipes");
                     });
                 } else{
                     res.render("kk/recipes/show", {recipe: found});
                 };
             } else if(req.user) { 
                 if(found.author.id.equals(req.user._id)){
-                    User.findOne({"username": req.user.username}).populate("favorites").exec(function(err, user){
-                        if(err){
-                            req.flash("error", err);
-                            return res.redirect("back");
-                        } else {
-                            res.render("kk/recipes/show", {recipe: found, user: user});
-                        };
-                    });
+                    User.findOne({"username": req.user.username}).populate("favorites").then((user) => {
+                        res.render("kk/recipes/show", {recipe: found, user: user});
+                    }).catch((err) => {
+                        req.flash("error", err);
+                        return res.redirect("/kk/recipes");
+                    });;
                 } else if(found.shared.some(foun => foun.userEmail === req.user.email)) {
-                    User.findOne({"username": req.user.username}).populate("favorites").exec(function(err, user){
-                        if(err){
-                            req.flash("error", err);
-                            return res.redirect("back");
-                        } else {
-                            res.render("kk/recipes/show", {recipe: found, user: user});
-                        };
+                    User.findOne({"username": req.user.username}).populate("favorites").then((user) => {
+                        res.render("kk/recipes/show", {recipe: found, user: user});
+                    }).catch((err) => {
+                        req.flash("error", err);
+                        return res.redirect("/kk/recipes");
                     });
                 } else if(req.user.allShared.some(allShare => allShare.userSlug === found.author.slug)) {
-                    User.findOne({"username": req.user.username}).populate("favorites").exec(function(err, user){
-                        if(err){
-                            req.flash("error", err);
-                            return res.redirect("back");
-                        } else {
+                    User.findOne({"username": req.user.username}).populate("favorites").then((user) => {
                             res.render("kk/recipes/show", {recipe: found, user: user});
-                        };
+                    }).catch((err) => {
+                        req.flash("error", err);
+                        return res.redirect("/kk/recipes");
                     });
                 } else {
                     res.redirect("/kk/recipes");
@@ -314,19 +259,19 @@ router.get("/show/:id", function(req,res){
             } else {
                 res.redirect("/kk/recipes");
             };
-        };
+    }).catch((err) => {
+        req.flash("error", err);
+        return res.redirect("/kk/recipes");
     });
 });
 //Edit
-router.get("/:id/edit", middleware.checkRecipeOwnership, function(req, res){
-    Recipe.findOne({"slug": req.params.id}, function(err, found){
-        if(err || !found) {
-            req.flash("error", "Item not found.");
-            return res.redirect("/kk/recipes");
-        } else {
-            res.render("kk/recipes/edit", {recipe: found});
-        };
-    });
+router.get("/:id/edit", middleware.checkRecipeOwnership, (req, res) => {
+    Recipe.findOne({"slug": req.params.id}).then((found) => {
+        res.render("kk/recipes/edit", {recipe: found});
+    }).catch((err) => {
+        req.flash("error", "Item not found.");
+        return res.redirect("/kk/recipes");
+    });;
 });
 
 module.exports = router;

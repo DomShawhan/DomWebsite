@@ -28,10 +28,6 @@ const app = module.exports = express();
 
 //Setup database
 const mongoSanitize = require('express-mongo-sanitize');
-mongoose.set("useNewUrlParser", true);
-mongoose.set("useFindAndModify", false);
-mongoose.set("useCreateIndex", true);
-mongoose.set("useUnifiedTopology", true);
 mongoose.connect(process.env.DatabaseDP);
 //setup cloudinary
 
@@ -64,14 +60,14 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 //setup flash and current user
-app.use(function(req, res, next){
+app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.error = req.flash("error");
     res.locals.success = req.flash("success");
     next();
 });  
 //Render start page
-app.get("/", function(req, res){
+app.get("/", (req, res) => {
     res.render("kkstart");
 });
 //upload picture of recipe card
@@ -96,20 +92,18 @@ app.post("/recipes/file", upload.array("recipe[pics]", 5), middleware.isLoggedIn
         vegetarian = req.body.recipe.vegetarian ? true : false;
 
     const newRecipe = { pics: [], normal: normal, shared: [], file: "image", createdby: createdby, title: title, serves: serves, type: type, author: author,  description: description, public: public, gluten: gluten, dairy: dairy, vegan: vegan, vegetarian: vegetarian, img: []};
-    Recipe.create(newRecipe, async function(err, newRecipe){
-        if(err){
-            req.flash("error", "Something went wrong.");
-            res.redirect("back");
-        } else {
-            if(req.files) {
-                //Upload files to Cloudinary
-                const pics = req.files.map(f => ({img: f.path, filename: f.filename}));
-                newRecipe.pics.push(...pics);
-                await newRecipe.save();
-            }
-            req.flash("success", "Recipe Created");
-            res.redirect("/kk/recipes/" + newRecipe.slug + "/ask");
-        };
+    Recipe.create(newRecipe).then(async (newRecipe) => {
+        if(req.files) {
+            //Upload files to Cloudinary
+            const pics = req.files.map(f => ({img: f.path, filename: f.filename}));
+            newRecipe.pics.push(...pics);
+            await newRecipe.save();
+        }
+        req.flash("success", "Recipe Created");
+        res.redirect("/kk/recipes/" + newRecipe.slug + "/ask");
+    }).catch(err => {
+        req.flash("error", "Something went wrong.");
+        res.redirect("back");
     });
 });
 //Update recipe
@@ -130,7 +124,7 @@ app.put("/recipes/:id", upload.array("recipe[pics]", 5), middleware.checkRecipeO
             vegan: req.body.recipe.vegan ? true : false,
             vegetarian: req.body.recipe.vegetarian ? true : false
         };
-    Recipe.findOne({"slug": req.params.id}, async (err, recipe) => {
+    Recipe.findOne({"slug": req.params.id}).then(async (recipe) => {
         if(recipe.file === "type") {
             //check if there is only one ingredient
             if(typeof req.body.recipe.ingredient_amount === "string") {
@@ -174,26 +168,27 @@ app.put("/recipes/:id", upload.array("recipe[pics]", 5), middleware.checkRecipeO
             };
         };
 
-        Recipe.updateOne({"slug": req.params.id}, recipeUpdate, async function(err, updated){
-            if(err) {
-                req.flash("error", "Recipe not found.");
-                res.redirect("/kk/recipes");
-            } else {
-                if(req.files) {
-                    const pics = req.files.map(f => ({img: f.path, filename: f.filename}));
-                    recipe.pics.push(...pics);
-                    await recipe.save();
-                };
-                req.flash("success", "Recipe Edit Completed");
-                res.redirect("/kk/recipes/show/" + req.params.id);
+        Recipe.updateOne({"slug": req.params.id}, recipeUpdate).then(async (err, updated) => {
+            if(req.files) {
+                const pics = req.files.map(f => ({img: f.path, filename: f.filename}));
+                recipe.pics.push(...pics);
+                await recipe.save();
             };
+            req.flash("success", "Recipe Edit Completed");
+            res.redirect("/kk/recipes/show/" + req.params.id);
+        }).catch(err => {
+            req.flash("error", "Recipe not found.");
+            res.redirect("/kk/recipes");
         });
+    }).catch(err => {
+        req.flash("error", "Something went wrong.");
+        res.redirect("back");
     });
 });
 //Ask if user wants to add images to the recipe
-app.get("/recipes/:id/ask", middleware.checkRecipeOwnership, function(req,res) {
-    Recipe.findOne({"slug": req.params.id}, function(err, found){
-        if(err || !found) {
+app.get("/recipes/:id/ask", middleware.checkRecipeOwnership, (req,res) => {
+    Recipe.findOne({"slug": req.params.id}).then((found) => {
+        if(!found) {
             req.flash("error", "Recipe not found.");
             res.redirect("/kk/recipes");
         } else {
@@ -204,12 +199,15 @@ app.get("/recipes/:id/ask", middleware.checkRecipeOwnership, function(req,res) {
                 res.redirect("/kk/recipes/show/" + found.slug);
             };
         };
+    }).catch(err => {
+        req.flash("error", "Recipe not found.");
+        res.redirect("/kk/recipes");
     });
 });
 //Render upload page
-app.get("/recipes/:id/image/new", middleware.checkRecipeOwnership, function(req, res){
-    Recipe.findOne({"slug": req.params.id}, function(err, found){
-        if (err || !found) {
+app.get("/recipes/:id/image/new", middleware.checkRecipeOwnership, (req, res) => {
+    Recipe.findOne({"slug": req.params.id}).then((found) => {
+        if (!found) {
             req.flash("error", "Recipe not found.");
             res.redirect("/kk/recipes");
         } else {
@@ -220,38 +218,39 @@ app.get("/recipes/:id/image/new", middleware.checkRecipeOwnership, function(req,
                 res.redirect("/kk/recipes/show/" + found.slug);
             };
         };
+    }).catch(err => {
+        req.flash("error", "Recipe not found.");
+        res.redirect("/kk/recipes");
     });
 });
 //Upload image of recipe
-app.post("/recipes/:id/image", middleware.checkRecipeOwnership, upload.single('img'), function(req, res){
-    Recipe.findOne({"slug": req.params.id}, function(err, recipe){
-        if(err){
-            req.flash("error", "Recipe not found.");
-            res.redirect("back");
-        } else {
-            if(req.file) {
-                if(recipe.img.length < 5) {
-                    const img = {
-                        img: req.file.path, 
-                        number: recipe.img.length, 
-                        filename: req.file.filename
-                    };
-                    recipe.img.push(img);
-                    recipe.save();
-                    req.flash("success", "Image Added");
-                    res.redirect("/kk/recipes/" + recipe.slug + "/image/new");
-                } else {
-                    req.flash("error", "Max number of image have been uploaded")
-                    res.redirect("/kk/recipes/show/" + recipe.slug);
+app.post("/recipes/:id/image", middleware.checkRecipeOwnership, upload.single('img'), (req, res) => {
+    Recipe.findOne({"slug": req.params.id}).then((recipe) => {
+        if(req.file) {
+            if(recipe.img.length < 5) {
+                const img = {
+                    img: req.file.path, 
+                    number: recipe.img.length, 
+                    filename: req.file.filename
                 };
+                recipe.img.push(img);
+                recipe.save();
+                req.flash("success", "Image Added");
+                res.redirect("/kk/recipes/" + recipe.slug + "/image/new");
+            } else {
+                req.flash("error", "Max number of image have been uploaded")
+                res.redirect("/kk/recipes/show/" + recipe.slug);
             };
         };
+    }).catch(err => {
+        req.flash("error", "Recipe not found.");
+        res.redirect("back");
     });
 });
 //Delete an image of the recipe
-app.delete("/recipes/:id/image/:idd", middleware.checkRecipeOwnership, function(req, res){
-    Recipe.findOne({"slug": req.params.id}, (err, recipe) => {
-        if(err || !recipe) {
+app.delete("/recipes/:id/image/:idd", middleware.checkRecipeOwnership, (req, res) => {
+    Recipe.findOne({"slug": req.params.id}).then((recipe) => {
+        if(!recipe) {
             req.flash("error", "Recipe not found.");
             res.redirect("back");
         } else {
@@ -273,12 +272,15 @@ app.delete("/recipes/:id/image/:idd", middleware.checkRecipeOwnership, function(
             req.flash("success", "Image deleted!")
             res.redirect("back");
         };
+    }).catch(err => {
+        req.flash("error", "Recipe not found.");
+        res.redirect("back");
     });
 });
 //Delete recipe
-app.delete("/recipes/:id", middleware.checkRecipeOwnership, async function(req, res){
-    Recipe.findOne({"slug": req.params.id}, async (err, recipes) => {
-        if(err || !recipes) {
+app.delete("/recipes/:id", middleware.checkRecipeOwnership, async (req, res) => {
+    Recipe.findOne({"slug": req.params.id}).then(async (recipes) => {
+        if(!recipes) {
             req.flash("error", "Recipe not found.");
             return res.redirect("/kk/recipes");
         } else {
@@ -334,30 +336,29 @@ app.delete("/recipes/:id", middleware.checkRecipeOwnership, async function(req, 
                 });
             };
             //Delete recipe and its dependencies
-            Recipe.deleteOne({"slug": req.params.id}, function(err, removedRec){
-                if(err){
-                    req.flash("error", "Recipe not found.");
-                    return res.redirect("/kk/recipes/" + req.params.id);
-                } else {
-                    Comment.deleteMany( {_id: { $in: removedRec.comments } }, (err) => {
-                        if(err) {
-                            req.flash("error", "Comment not found.");
+            Recipe.deleteOne({"slug": req.params.id}).then((removedRec) => {
+                Comment.deleteMany( {_id: { $in: removedRec.comments } }).then(() => {
+                    Favorites.deleteMany({"recipe_id": req.params.id}).exec(function(err){
+                        if(err){
+                            req.flash("error", "Favorites not found.");
                             return res.redirect("/kk/recipes");
                         } else {
-                            Favorites.deleteMany({"recipe_id": req.params.id}).exec(function(err){
-                                if(err){
-                                    req.flash("error", "Favorites not found.");
-                                    return res.redirect("/kk/recipes");
-                                } else {
-                                    req.flash("success", "Recipe Deleted");
-                                    res.redirect("/kk/recipes");
-                                };
-                            });
+                            req.flash("success", "Recipe Deleted");
+                            res.redirect("/kk/recipes");
                         };
                     });
-                };
+                }).catch(err => {
+                    req.flash("error", "Comment not found.");
+                    return res.redirect("/kk/recipes");
+                });
+            }).catch(err => {
+                req.flash("error", "Recipe not found.");
+                return res.redirect("/kk/recipes/" + req.params.id);
             });
         };
+    }).catch(err => {
+        req.flash("error", "Recipe not found.");
+        return res.redirect("/kk/recipes");
     });
 });
 //use Routes
@@ -367,7 +368,7 @@ app.use(indexRoutes);
 app.use("/recipes/", recipeRoutes);
 app.use("/recipes/:id/comments", commentRoutes);
 //redirect to home route when the user trys to enter a nonexistent route
-app.get("*", function(req, res){
+app.get("*", (req, res) => {
     req.flash("error", "Recipe not found");
     res.redirect("/kk/recipes");
 });
